@@ -34,14 +34,13 @@ Below is a full feature breakdown.
 
 ## 🚨 Emergency Response Contacts
 
-- **Slide-out bottom sheet** — a dedicated panel accessible from the top app bar and home screen.
+- **Top Section in the Reference Page** — a dedicated section accessible from reference page.
 - **Editable contact fields** — personalize the numbers for:
   - Bureau of Fire Protection (BFP)
   - Local PNP Station
   - Rescue Team
   - Municipal DRRMO
 - **Save to device** — numbers are stored locally via `localStorage`.
-- **Tap-to-call** — the **Call** button uses the native `tel:` protocol to open the device's dialer instantly.
 - **Input validation** — accepts only valid phone number formats.
 
 ---
