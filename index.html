@@ -1,0 +1,2992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B5FA5">
+<title>Bomb Threat Preparedness & Response</title>
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  --primary:#0B5FA5;
+  --primary-dark:#08497F;
+  --primary-soft:#E7F0F9;
+  --danger:#C62828;
+  --danger-soft:#FDECEC;
+  --warn:#B26A00;
+  --warn-soft:#FFF4E0;
+  --safe:#2E7D32;
+  --safe-soft:#E9F5EA;
+
+  --bg:#F4F6F8;
+  --surface:#FFFFFF;
+  --text:#14202B;
+  --muted:#5C6B7A;
+  --border:#E2E8EE;
+
+  --radius:16px;
+  --radius-sm:10px;
+  --appbar-h:56px;
+  --nav-h:64px;
+  --shadow:0 1px 2px rgba(16,32,48,.06), 0 4px 12px rgba(16,32,48,.06);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg); color:var(--text);
+  font-size:15px; line-height:1.5;
+  overscroll-behavior-y:none;
+  transition:background .35s ease, color .35s ease;
+}
+
+/* ============================================================
+   TOP APP BAR
+   ============================================================ */
+.appbar{
+  position:fixed; inset:0 0 auto 0; z-index:50;
+  height:calc(var(--appbar-h) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  display:flex; align-items:center; gap:8px; padding-inline:12px;
+  background:var(--primary); color:#fff;
+  box-shadow:0 2px 8px rgba(8,40,70,.18);
+}
+.appbar .brand{display:flex;align-items:center;gap:10px;min-width:0;flex:1;}
+.appbar .logo{
+  width:30px;height:30px;flex:none;border-radius:9px;
+  background:rgba(255,255,255,.18); display:grid;place-items:center;font-size:16px;
+}
+.appbar h1{font-size:16px;font-weight:600;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.appbar .sub{font-size:11px;opacity:.8;margin-top:-2px;}
+.icon-btn{
+  width:40px;height:40px;flex:none;border:0;border-radius:50%;
+  background:transparent;color:inherit;display:grid;place-items:center;cursor:pointer;
+  transition:background .15s;
+}
+.icon-btn:active{background:rgba(255,255,255,.18);}
+.icon-btn svg{width:21px;height:21px;fill:currentColor;}
+
+/* ============================================================
+   MAIN / SCREENS
+   ============================================================ */
+main{
+  padding-top:calc(var(--appbar-h) + env(safe-area-inset-top));
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px);
+  min-height:100%;
+}
+.screen{display:none;padding:16px 16px 8px;}
+.screen.active{display:block;animation:fade .22s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+.section-title{
+  font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--muted);margin:22px 4px 10px;
+}
+.section-title:first-child{margin-top:4px;}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  border-radius:var(--radius);
+  background:linear-gradient(150deg,var(--primary) 0%,var(--primary-dark) 100%);
+  color:#fff; padding:22px 18px 18px;
+  box-shadow:var(--shadow); position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;right:-40px;top:-40px;
+  width:150px;height:150px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+}
+.hero .eyebrow{font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.85;font-weight:600;}
+.hero h2{font-size:22px;line-height:1.25;margin:8px 0 6px;font-weight:700;letter-spacing:-.01em;position:relative;}
+.hero p{margin:0;font-size:13.5px;opacity:.9;max-width:36ch;}
+
+.hero-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px;position:relative;}
+.hero-actions button{
+  border:0;border-radius:12px;padding:12px 6px;
+  background:rgba(255,255,255,.16); color:#fff;
+  font-size:12.5px;font-weight:600;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  cursor:pointer;backdrop-filter:blur(4px);
+  transition:background .15s, transform .1s;
+}
+.hero-actions button:active{transform:scale(.96);background:rgba(255,255,255,.26);}
+.hero-actions .dot{width:7px;height:7px;border-radius:50%;}
+
+/* ============================================================
+   PREP NOTICE
+   ============================================================ */
+.prep-notice{
+  margin-top:14px;background:var(--warn-soft);
+  border:1.5px solid var(--warn);border-radius:var(--radius);
+  padding:14px;position:relative;
+}
+.prep-notice .head{display:flex;align-items:center;gap:9px;margin-bottom:8px;}
+.prep-notice .head .badge{
+  width:28px;height:28px;flex:none;border-radius:9px;
+  background:var(--warn);color:#fff;display:grid;place-items:center;font-size:15px;
+}
+.prep-notice .head h3{margin:0;font-size:13.5px;font-weight:700;color:#7A4900;letter-spacing:.01em;}
+.prep-notice p{margin:0;font-size:12.5px;color:#7A4900;line-height:1.5;}
+.prep-notice ul{margin:8px 0 0;padding-left:18px;font-size:12.5px;color:#7A4900;line-height:1.55;}
+.prep-notice ul li{margin-bottom:4px;}
+.prep-notice .em{font-weight:700;}
+
+/* ============================================================
+   CARD GRID / CARDS
+   ============================================================ */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.tile{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;
+  display:flex;flex-direction:column;gap:8px;
+  cursor:pointer;box-shadow:var(--shadow);
+  transition:transform .1s, border-color .15s;text-align:left;
+}
+.tile:active{transform:scale(.975);border-color:var(--primary);}
+.tile .ico{
+  width:34px;height:34px;border-radius:10px;
+  display:grid;place-items:center;font-size:17px;
+  background:var(--primary-soft);
+}
+.tile h3{margin:0;font-size:13.5px;font-weight:650;line-height:1.3;}
+.tile span{font-size:11.5px;color:var(--muted);line-height:1.35;}
+
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;margin-bottom:10px;
+  box-shadow:var(--shadow);
+}
+.card h3{margin:0 0 6px;font-size:14.5px;font-weight:650;}
+.card p{margin:0;font-size:13.5px;color:var(--muted);}
+.card p + p{margin-top:8px;}
+
+.callout{
+  border-radius:var(--radius-sm);padding:11px 13px;
+  font-size:13px;border-left:4px solid;margin-top:10px;
+}
+.callout b{display:block;margin-bottom:2px;font-size:12px;letter-spacing:.04em;text-transform:uppercase;}
+.callout.danger{background:var(--danger-soft);border-color:var(--danger);color:#8E1F1F;}
+.callout.warn{background:var(--warn-soft);border-color:var(--warn);color:#7A4900;}
+.callout.safe{background:var(--safe-soft);border-color:var(--safe);color:#1F5A23;}
+.callout.info{background:var(--primary-soft);border-color:var(--primary);color:#08497F;}
+
+.readmore{
+  display:inline-flex;align-items:center;gap:6px;
+  margin-top:9px;padding:8px 12px;
+  background:var(--primary);color:#fff;
+  border-radius:99px;text-decoration:none;
+  font-size:12px;font-weight:650;font-family:inherit;
+  transition:background .15s, transform .1s;
+}
+.readmore:active{transform:scale(.97);background:var(--primary-dark);}
+.readmore svg{width:14px;height:14px;fill:currentColor;}
+
+/* ============================================================
+   EMERGENCY CONTACTS LIST (Reference page)
+   ============================================================ */
+.ecard{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:10px;
+  box-shadow:var(--shadow);
+  transition:background .35s ease, border-color .35s ease;
+}
+
+.ecard-intro{
+  background:var(--primary-soft);
+  border-left:4px solid var(--primary);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;
+  margin-bottom:14px;
+}
+.ecard-intro h4{
+  margin:0 0 5px;
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--primary-dark);
+}
+.ecard-intro p{
+  margin:0;
+  font-size:12.5px;
+  color:#08497F;
+  line-height:1.5;
+}
+
+.ecard-row{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px;
+  margin-bottom:10px;
+  transition:background .35s ease, border-color .35s ease;
+}
+body.dark .ecard-row{background:var(--surface);}
+
+.ecard-row .label{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13.5px;
+  font-weight:650;
+  margin-bottom:8px;
+  color:var(--text);
+}
+.ecard-row .label .ico-sm{
+  width:26px;
+  height:26px;
+  border-radius:8px;
+  flex:none;
+  background:var(--primary-soft);
+  display:grid;
+  place-items:center;
+  font-size:14px;
+}
+
+.ecard-input-wrap{
+  display:flex;
+  gap:8px;
+  align-items:stretch;
+}
+.ecard-input{
+  flex:1;
+  min-width:0;
+  padding:11px 12px;
+  font-size:14px;
+  font-family:inherit;
+  border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);
+  background:#F8FAFC;
+  color:var(--text);
+  transition:border-color .15s, background .15s;
+}
+.ecard-input:focus{
+  outline:none;
+  border-color:var(--primary);
+  background:#fff;
+}
+body.dark .ecard-input{
+  background:#131C25;
+  color:var(--text);
+}
+body.dark .ecard-input:focus{background:#18222D;}
+
+.ecard-btn{
+  flex:none;
+  border:0;
+  border-radius:var(--radius-sm);
+  padding:0 14px;
+  font-size:13px;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  transition:transform .1s, background .15s, color .15s;
+}
+.ecard-btn:active{transform:scale(.96);}
+
+.ecard-save{
+  background:var(--primary);
+  color:#fff;
+  min-width:78px;
+}
+.ecard-save.saved{
+  background:var(--safe);
+}
+
+.ecard-copy{
+  background:var(--primary-soft);
+  color:var(--primary);
+  min-width:70px;
+  position:relative;
+  z-index:1;
+}
+.ecard-copy.done{
+  background:var(--safe);
+  color:#fff;
+}
+
+.ecard-saved-note{
+  font-size:11.5px;
+  color:var(--safe);
+  font-weight:600;
+  margin-top:6px;
+  display:none;
+}
+.ecard-saved-note.show{display:block;}
+/* ============================================================
+   SEGMENTED CONTROL
+   ============================================================ */
+.segmented{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  background:#E8EDF2;border-radius:12px;padding:4px;gap:4px;
+  margin-bottom:16px;
+  transition:background .35s ease;
+}
+.segmented button{
+  border:0;background:transparent;border-radius:9px;
+  padding:9px 4px;font-size:13px;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:background .15s,color .15s;
+}
+.segmented button.active{
+  background:var(--surface);color:var(--primary);
+  box-shadow:0 1px 4px rgba(16,32,48,.12);
+}
+.panel{display:none;}
+.panel.active{display:block;animation:fade .2s ease;}
+
+/* ============================================================
+   STEP LIST
+   ============================================================ */
+.step{
+  display:flex;gap:12px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:13px;margin-bottom:9px;box-shadow:var(--shadow);
+}
+.step .num{
+  flex:none;width:28px;height:28px;border-radius:50%;
+  background:var(--primary);color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:700;
+}
+.step.danger .num{background:var(--danger);}
+.step .body{min-width:0;}
+.step h4{margin:0 0 3px;font-size:14px;font-weight:650;}
+.step p{margin:0;font-size:13px;color:var(--muted);}
+
+.handoff{
+  border:2px dashed var(--danger);
+  background:var(--danger-soft);
+  border-radius:var(--radius);
+  padding:15px;margin:14px 0 6px;text-align:center;
+}
+.handoff .tag{
+  display:inline-block;background:var(--danger);color:#fff;
+  font-size:10.5px;font-weight:700;letter-spacing:.07em;
+  padding:3px 9px;border-radius:99px;text-transform:uppercase;
+}
+.handoff h4{margin:9px 0 5px;font-size:15px;color:#8E1F1F;}
+.handoff p{margin:0;font-size:13px;color:#8E1F1F;opacity:.9;}
+
+/* ============================================================
+   ACCORDION
+   ============================================================ */
+details.acc{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);margin-bottom:9px;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+details.acc summary{
+  list-style:none;cursor:pointer;padding:14px;
+  display:flex;align-items:center;gap:11px;
+  font-size:14px;font-weight:650;
+}
+details.acc summary::-webkit-details-marker{display:none;}
+details.acc summary .ico{
+  width:30px;height:30px;flex:none;border-radius:9px;
+  display:grid;place-items:center;font-size:15px;background:var(--primary-soft);
+}
+details.acc summary .chev{
+  margin-left:auto;width:16px;height:16px;fill:var(--muted);
+  transition:transform .2s;
+}
+details.acc[open] summary .chev{transform:rotate(180deg);}
+details.acc .content{
+  padding:12px 14px 14px;border-top:1px solid var(--border);
+}
+
+.def{padding:10px 0;border-bottom:1px solid var(--border);}
+.def:last-child{border-bottom:0;padding-bottom:0;}
+.def b{display:block;font-size:13.5px;margin-bottom:2px;color:var(--primary-dark);}
+.def span{font-size:13px;color:var(--muted);}
+
+/* ============================================================
+   LEGAL GROUP HEADINGS
+   ============================================================ */
+.legal-group{margin-top:14px;}
+.legal-group:first-child{margin-top:4px;}
+.legal-group .group-head{
+  display:flex;align-items:center;gap:8px;
+  font-size:11.5px;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--primary);
+  padding:8px 0 6px;border-bottom:2px solid var(--primary-soft);
+  margin-bottom:8px;
+}
+.legal-group .group-head .emoji{font-size:14px;}
+
+.legal-item{padding:10px 0;border-bottom:1px solid var(--border);}
+.legal-item:last-child{border-bottom:0;padding-bottom:0;}
+.legal-item b{
+  display:block;font-size:13.5px;margin-bottom:3px;
+  color:var(--primary-dark);line-height:1.4;
+}
+.legal-item .full-title{
+  display:block;font-size:12.5px;color:var(--text);
+  font-style:italic;margin-bottom:3px;line-height:1.45;
+}
+.legal-item .desc{
+  display:block;font-size:12.5px;color:var(--muted);line-height:1.5;
+}
+.legal-item .tagline{
+  display:inline-block;font-size:10.5px;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;
+  background:var(--primary-soft);color:var(--primary);
+  padding:2px 8px;border-radius:99px;margin-top:4px;
+}
+.legal-item .tagline.danger{background:var(--danger-soft);color:var(--danger);}
+.legal-item .tagline.warn{background:var(--warn-soft);color:var(--warn);}
+.legal-item .tagline.safe{background:var(--safe-soft);color:var(--safe);}
+
+/* ============================================================
+   PHOTO CONTAINERS — FIXED OVERFLOW
+   Images are now hard-clipped inside their containers and can
+   never spill over into neighboring cards.
+   ============================================================ */
+.photo{
+  border:1.5px dashed #B9C6D2;border-radius:var(--radius-sm);
+  background:#F8FAFC;color:#8496A6;
+  height:110px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;
+  font-size:11.5px;font-weight:600;letter-spacing:.04em;
+  text-align:center;padding:8px;margin-bottom:10px;
+  /* Hard containment — the key fix */
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+}
+.photo.small{height:78px;font-size:10.5px;}
+
+/* Image: bounded by its container, never spills out */
+.photo img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  max-height:100%;
+  object-fit:contain;
+  border-radius:6px;
+  /* Belt and braces */
+  position:absolute;
+  inset:0;
+  margin:auto;
+}
+
+.photo .fname{
+  display:block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10px;color:#8496A6;margin-top:4px;letter-spacing:.02em;
+  background:rgba(0,0,0,.04);padding:2px 6px;border-radius:99px;font-weight:700;
+}
+body.dark .photo .fname{background:rgba(255,255,255,.06);}
+
+.aware{
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:11px;margin-bottom:10px;background:#fff;
+  /* Prevent any weird child from spilling out */
+  overflow:hidden;
+}
+.aware:last-child{margin-bottom:0;}
+.aware h4{margin:0 0 7px;font-size:13.5px;font-weight:650;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:7px;}
+.chip{
+  font-size:11px;font-weight:600;padding:3px 8px;border-radius:99px;
+  background:#EEF2F6;color:var(--muted);
+}
+.chip.red{background:var(--danger-soft);color:#8E1F1F;}
+.chip.green{background:var(--safe-soft);color:#1F5A23;}
+.aware p{margin:0;font-size:12.5px;color:var(--muted);}
+
+/* ============================================================
+   WHO ARE POSSIBLE BOMBERS
+   ============================================================ */
+.bomber-card{
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:12px;margin-bottom:10px;background:#fff;
+  border-left:4px solid var(--warn);
+}
+.bomber-card:last-child{margin-bottom:0;}
+.bomber-card h4{
+  margin:0 0 5px;font-size:13.5px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.bomber-card h4 .emoji{
+  width:26px;height:26px;flex:none;border-radius:8px;
+  background:var(--warn-soft);display:grid;place-items:center;font-size:14px;
+}
+.bomber-card p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+/* ============================================================
+   SUSPICIOUS INDICATORS
+   ============================================================ */
+.indicator-intro{
+  background:var(--danger-soft);
+  border-left:4px solid var(--danger);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;margin-bottom:14px;
+}
+.indicator-intro h4{margin:0 0 5px;font-size:13.5px;font-weight:700;color:#8E1F1F;}
+.indicator-intro p{margin:0;font-size:12.5px;color:#8E1F1F;line-height:1.5;}
+
+.indicator-group{margin-top:14px;}
+.indicator-group:first-of-type{margin-top:4px;}
+.indicator-group .group-head{
+  display:flex;align-items:center;gap:8px;
+  font-size:11.5px;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--primary);
+  padding:8px 0 6px;border-bottom:2px solid var(--primary-soft);
+  margin-bottom:8px;
+}
+.indicator-group .group-head .emoji{font-size:14px;}
+
+.indicator-item{
+  display:flex;gap:10px;
+  padding:11px 12px;margin-bottom:8px;
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  border-left:4px solid var(--warn);
+}
+body.dark .indicator-item{background:var(--surface);}
+.indicator-item .ind-ico{
+  flex:none;width:32px;height:32px;border-radius:10px;
+  background:var(--warn-soft);color:var(--warn);
+  display:grid;place-items:center;font-size:15px;
+}
+.indicator-item .ind-body{min-width:0;}
+.indicator-item h5{margin:0 0 3px;font-size:13px;font-weight:700;line-height:1.35;}
+.indicator-item p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.5;}
+.indicator-item.high{border-left-color:var(--danger);}
+.indicator-item.high .ind-ico{background:var(--danger-soft);color:var(--danger);}
+
+/* ============================================================
+   VULNERABLE AREAS
+   ============================================================ */
+.vuln-intro{
+  background:var(--primary-soft);
+  border-left:4px solid var(--primary);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;margin-bottom:14px;
+}
+.vuln-intro h4{margin:0 0 5px;font-size:13.5px;font-weight:700;color:var(--primary-dark);}
+.vuln-intro p{margin:0;font-size:12.5px;color:#08497F;line-height:1.5;}
+
+.risk-legend{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-bottom:16px;
+}
+.risk-legend .rl{
+  border-radius:var(--radius-sm);
+  padding:10px 8px;text-align:center;
+  border:1.5px solid;
+}
+.risk-legend .rl .rl-dot{
+  display:inline-block;width:10px;height:10px;border-radius:50%;
+  margin-bottom:4px;
+}
+.risk-legend .rl strong{
+  display:block;font-size:11.5px;font-weight:800;
+  letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px;
+}
+.risk-legend .rl span{display:block;font-size:10.5px;line-height:1.35;opacity:.85;}
+
+.rl.high{background:#FDECEC;border-color:#C62828;color:#8E1F1F;}
+.rl.high .rl-dot{background:#C62828;}
+.rl.med{background:#FFF4E0;border-color:#E8862B;color:#8A4A00;}
+.rl.med .rl-dot{background:#E8862B;}
+.rl.low{background:#FFFBE0;border-color:#C9A800;color:#6B5A00;}
+.rl.low .rl-dot{background:#C9A800;}
+
+body.dark .rl.high{background:#3A1D1D;}
+body.dark .rl.med{background:#3A2B15;}
+body.dark .rl.low{background:#332E12;}
+
+.risk-group{margin-top:18px;}
+.risk-group:first-of-type{margin-top:4px;}
+
+.risk-group .risk-head{
+  display:flex;align-items:center;gap:9px;
+  padding:10px 13px;border-radius:var(--radius-sm);
+  margin-bottom:10px;
+  font-size:12.5px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.risk-group .risk-head .rh-dot{
+  width:12px;height:12px;border-radius:50%;flex:none;
+  box-shadow:0 0 0 3px rgba(255,255,255,.4);
+}
+.risk-group .risk-head .rh-count{
+  margin-left:auto;font-size:11px;font-weight:700;
+  padding:2px 8px;border-radius:99px;
+  background:rgba(255,255,255,.5);
+}
+
+.risk-head.high{background:#FDECEC;color:#8E1F1F;}
+.risk-head.high .rh-dot{background:#C62828;}
+.risk-head.med{background:#FFF4E0;color:#8A4A00;}
+.risk-head.med .rh-dot{background:#E8862B;}
+.risk-head.low{background:#FFFBE0;color:#6B5A00;}
+.risk-head.low .rh-dot{background:#C9A800;}
+
+body.dark .risk-head.high{background:#3A1D1D;}
+body.dark .risk-head.med{background:#3A2B15;}
+body.dark .risk-head.low{background:#332E12;}
+
+.vuln-item{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;margin-bottom:9px;
+  border-left:5px solid var(--warn);
+}
+body.dark .vuln-item{background:var(--surface);}
+.vuln-item.high{border-left-color:#C62828;}
+.vuln-item.med{border-left-color:#E8862B;}
+.vuln-item.low{border-left-color:#C9A800;}
+
+.vuln-item h5{margin:0 0 5px;font-size:13.5px;font-weight:700;line-height:1.35;color:var(--text);}
+.vuln-item p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.55;}
+.vuln-item .vn-tag{
+  display:inline-block;font-size:9.5px;font-weight:800;
+  letter-spacing:.07em;text-transform:uppercase;
+  padding:2px 8px;border-radius:99px;margin-top:7px;
+}
+.vuln-item .vn-tag.high{background:#FDECEC;color:#8E1F1F;}
+.vuln-item .vn-tag.med{background:#FFF4E0;color:#8A4A00;}
+.vuln-item .vn-tag.low{background:#FFFBE0;color:#6B5A00;}
+body.dark .vuln-item .vn-tag.high{background:#3A1D1D;}
+body.dark .vuln-item .vn-tag.med{background:#3A2B15;}
+body.dark .vuln-item .vn-tag.low{background:#332E12;}
+
+/* ============================================================
+   ROLES & RESPONSIBILITIES
+   ============================================================ */
+.roles-intro{
+  background:var(--primary-soft);
+  border-left:4px solid var(--primary);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;margin-bottom:14px;
+}
+.roles-intro h4{margin:0 0 5px;font-size:13.5px;font-weight:700;color:var(--primary-dark);}
+.roles-intro p{margin:0;font-size:12.5px;color:#08497F;line-height:1.5;}
+
+.role-block{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  margin-bottom:11px;overflow:hidden;
+  border-left:5px solid var(--primary);
+}
+body.dark .role-block{background:var(--surface);}
+
+/* ============================================================
+   DARK MODE FIX — tile titles & section titles
+   ============================================================ */
+body.dark .tile{
+  background:var(--surface);
+  border-color:var(--border);
+}
+body.dark .tile h3{
+  color:var(--text);
+}
+body.dark .tile span{
+  color:var(--muted);
+}
+body.dark .tile .ico{
+  background:var(--primary-soft);
+  color:var(--primary);
+}
+
+/* Safety net — make sure any heading inside a card/tile
+   follows the dark-mode text color */
+body.dark .card h3,
+body.dark .tile h3,
+body.dark .section-title,
+body.dark .hero h2,
+body.dark .collapsible-title strong,
+body.dark .text-size-info strong,
+body.dark .theme-card .theme-info strong{
+  color:var(--text);
+}
+body.dark .card p,
+body.dark .collapsible-body p{
+  color:var(--muted);
+}
+body.dark .section-title{
+  color:var(--muted);
+}
+.role-block .role-head{
+  padding:11px 13px;
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(90deg, var(--primary-soft), transparent 85%);
+  border-bottom:1px solid var(--border);
+}
+body.dark .role-block .role-head{
+  background:linear-gradient(90deg, rgba(27,50,71,.65), transparent 85%);
+}
+.role-block .role-head .role-ico{
+  width:32px;height:32px;flex:none;border-radius:9px;
+  background:#fff;color:var(--primary);
+  display:grid;place-items:center;font-size:16px;
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+}
+body.dark .role-block .role-head .role-ico{background:#131C25;}
+.role-block .role-head h4{
+  margin:0;font-size:13.5px;font-weight:800;
+  letter-spacing:.02em;color:var(--primary-dark);
+}
+body.dark .role-block .role-head h4{color:#8AB4F8;}
+
+.role-block .role-body{padding:11px 13px 13px;}
+
+.duty{
+  display:flex;gap:10px;padding:7px 0;
+  border-bottom:1px dashed var(--border);
+}
+.duty:last-child{border-bottom:0;padding-bottom:0;}
+.duty:first-child{padding-top:0;}
+.duty .duty-dot{
+  flex:none;width:8px;height:8px;border-radius:50%;
+  margin-top:7px;background:var(--primary);
+}
+.role-block.head .duty .duty-dot{background:var(--danger);}
+.role-block.drrm .duty .duty-dot{background:var(--warn);}
+.role-block.teacher .duty .duty-dot{background:var(--primary);}
+.role-block.security .duty .duty-dot{background:#6A4FB8;}
+.role-block.learner .duty .duty-dot{background:var(--safe);}
+
+.duty .duty-body{min-width:0;flex:1;}
+.duty h5{
+  margin:0 0 2px;font-size:12.5px;font-weight:750;
+  color:var(--text);line-height:1.3;
+}
+.duty p{margin:0;font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+.role-block.head{border-left-color:var(--danger);}
+.role-block.drrm{border-left-color:var(--warn);}
+.role-block.teacher{border-left-color:var(--primary);}
+.role-block.security{border-left-color:#6A4FB8;}
+.role-block.learner{border-left-color:var(--safe);}
+
+/* ============================================================
+   SPECIAL SITUATIONS
+   ============================================================ */
+.special-intro{
+  background:var(--warn-soft);
+  border-left:4px solid var(--warn);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;margin-bottom:14px;
+}
+.special-intro h4{margin:0 0 5px;font-size:13.5px;font-weight:700;color:#7A4900;}
+.special-intro p{margin:0;font-size:12.5px;color:#7A4900;line-height:1.5;}
+
+.special-card{
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;margin-bottom:9px;
+  border-left:5px solid var(--primary);
+}
+body.dark .special-card{background:var(--surface);}
+
+.special-card .sc-head{
+  display:flex;align-items:center;gap:9px;
+  margin-bottom:7px;
+}
+.special-card .sc-ico{
+  width:28px;height:28px;flex:none;border-radius:8px;
+  background:var(--primary-soft);color:var(--primary);
+  display:grid;place-items:center;font-size:14px;
+}
+.special-card h5{
+  margin:0;font-size:13.5px;font-weight:750;
+  color:var(--text);line-height:1.35;
+}
+.special-card p{
+  margin:0;font-size:12.5px;color:var(--muted);line-height:1.55;
+}
+
+.special-card.exam{border-left-color:#C62828;}
+.special-card.exam .sc-ico{background:#FDECEC;color:#8E1F1F;}
+.special-card.flag{border-left-color:#E8862B;}
+.special-card.flag .sc-ico{background:#FFF4E0;color:#8A4A00;}
+.special-card.grad{border-left-color:#6A4FB8;}
+.special-card.grad .sc-ico{background:#EDE7FB;color:#4A2E9A;}
+body.dark .special-card.grad .sc-ico{background:#2A2145;color:#C4B2F0;}
+.special-card.sports{border-left-color:#0B5FA5;}
+.special-card.sports .sc-ico{background:#E7F0F9;color:#08497F;}
+.special-card.parents{border-left-color:#2E7D32;}
+.special-card.parents .sc-ico{background:#E9F5EA;color:#1F5A23;}
+.special-card.lunch{border-left-color:#C9A800;}
+.special-card.lunch .sc-ico{background:#FFFBE0;color:#6B5A00;}
+.special-card.outside{border-left-color:#5C6B7A;}
+.special-card.outside .sc-ico{background:#EEF2F6;color:#3A4652;}
+.special-card.weather{border-left-color:#0288D1;}
+.special-card.weather .sc-ico{background:#E1F3FB;color:#025D82;}
+.special-card.quake{border-left-color:#D84315;}
+.special-card.quake .sc-ico{background:#FCE9E2;color:#9C3111;}
+.special-card.already-out{border-left-color:#2E7D32;}
+.special-card.already-out .sc-ico{background:#E9F5EA;color:#1F5A23;}
+
+/* ============================================================
+   YOUTUBE VIDEOS SECTION (new)
+   ============================================================ */
+.video-intro{
+  background:var(--primary-soft);
+  border-left:4px solid var(--primary);
+  border-radius:var(--radius-sm);
+  padding:12px 13px;margin-bottom:14px;
+}
+.video-intro h4{margin:0 0 5px;font-size:13.5px;font-weight:700;color:var(--primary-dark);}
+.video-intro p{margin:0;font-size:12.5px;color:#08497F;line-height:1.5;}
+
+.video-group{margin-top:14px;}
+.video-group:first-of-type{margin-top:4px;}
+.video-group .group-head{
+  display:flex;align-items:center;gap:8px;
+  font-size:11.5px;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--primary);
+  padding:8px 0 6px;border-bottom:2px solid var(--primary-soft);
+  margin-bottom:10px;
+}
+.video-group .group-head .emoji{font-size:14px;}
+
+.video-card{
+  display:flex;gap:11px;
+  background:#fff;border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  padding:11px;margin-bottom:9px;
+  text-decoration:none;color:inherit;
+  transition:transform .1s, border-color .15s, box-shadow .15s;
+  border-left:4px solid #FF0000; /* YouTube red */
+  position:relative;
+}
+body.dark .video-card{background:var(--surface);}
+.video-card:active{transform:scale(.985);border-color:#FF0000;}
+.video-card:hover{border-color:#FF0000;box-shadow:0 2px 10px rgba(255,0,0,.10);}
+
+.video-thumb{
+  flex:none;width:76px;height:58px;
+  border-radius:9px;
+  background:linear-gradient(135deg,#FF0000 0%,#C4302B 100%);
+  display:grid;place-items:center;
+  color:#fff;font-size:22px;
+  position:relative;overflow:hidden;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.video-thumb::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.22), transparent 60%);
+}
+.video-thumb .play-icon{
+  position:relative;z-index:1;
+  width:32px;height:32px;
+  display:grid;place-items:center;
+  background:rgba(0,0,0,.35);
+  border-radius:50%;
+  font-size:14px;
+  padding-left:3px;
+}
+
+.video-info{min-width:0;flex:1;display:flex;flex-direction:column;justify-content:center;}
+.video-info h5{
+  margin:0 0 3px;font-size:13px;font-weight:700;
+  line-height:1.35;color:var(--text);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.video-info .video-meta{
+  display:flex;align-items:center;gap:6px;
+  font-size:10.5px;color:var(--muted);
+  margin-top:2px;
+}
+.video-info .video-meta .yt-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  background:#FF0000;color:#fff;
+  padding:1px 6px;border-radius:99px;
+  font-weight:700;font-size:9.5px;
+  letter-spacing:.05em;text-transform:uppercase;
+}
+.video-info .video-url{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:10px;color:var(--muted);
+  margin-top:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.video-callout{
+  background:var(--warn-soft);
+  border-left:4px solid var(--warn);
+  border-radius:var(--radius-sm);
+  padding:11px 13px;margin-top:12px;
+  font-size:12.5px;color:#7A4900;line-height:1.5;
+}
+.video-callout b{display:block;margin-bottom:2px;font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;}
+
+/* ============================================================
+   REMEMBER LIST
+   ============================================================ */
+.remember-intro{
+  background:var(--primary-soft);
+  border-radius:var(--radius);padding:14px;margin-bottom:14px;
+  border-left:4px solid var(--primary);
+}
+.remember-intro h3{margin:0 0 4px;font-size:14px;font-weight:700;color:var(--primary-dark);}
+.remember-intro p{margin:0;font-size:12.5px;color:#08497F;line-height:1.5;}
+
+.remember-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;margin-bottom:10px;
+  box-shadow:var(--shadow); display:flex;gap:12px;
+}
+.remember-card .badge{
+  flex:none;width:36px;height:36px;border-radius:11px;
+  display:grid;place-items:center;font-size:17px;
+  background:var(--warn-soft);color:var(--warn);
+}
+.remember-card.critical .badge{background:var(--danger-soft);color:var(--danger);}
+.remember-card.safe .badge{background:var(--safe-soft);color:var(--safe);}
+.remember-card .rc-body{min-width:0;}
+.remember-card h4{margin:0 0 5px;font-size:14px;font-weight:700;line-height:1.35;}
+.remember-card p{margin:0;font-size:13px;color:var(--muted);line-height:1.5;}
+.remember-card p + p{margin-top:7px;}
+.remember-card .highlight{color:var(--danger);font-weight:650;}
+.remember-card .highlight.green{color:var(--safe);}
+
+.magic-word-box{
+  margin-top:10px;background:#F8FAFC;
+  border:1.5px dashed var(--primary);
+  border-radius:var(--radius-sm);padding:11px;
+}
+.magic-word-box .label{
+  font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--primary);margin-bottom:4px;
+}
+.magic-word-box .example{font-size:13px;font-style:italic;color:var(--text);}
+.magic-word-box .example b{color:var(--primary-dark);font-style:normal;}
+
+/* ============================================================
+   MISCONCEPTIONS
+   ============================================================ */
+.misconception{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);margin-bottom:10px;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.misconception .myth{
+  background:var(--danger-soft);
+  padding:11px 13px;display:flex;gap:10px;align-items:flex-start;
+  border-bottom:1px solid #F3C7C7;
+}
+.misconception .myth .tag{
+  flex:none;font-size:10px;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;color:#fff;background:var(--danger);
+  padding:3px 8px;border-radius:99px;margin-top:2px;
+}
+.misconception .myth p{
+  margin:0;font-size:13px;font-weight:650;color:#8E1F1F;line-height:1.4;
+}
+.misconception .fact{
+  padding:11px 13px;display:flex;gap:10px;align-items:flex-start;
+}
+.misconception .fact .tag{
+  flex:none;font-size:10px;font-weight:800;letter-spacing:.07em;
+  text-transform:uppercase;color:#fff;background:var(--safe);
+  padding:3px 8px;border-radius:99px;margin-top:2px;
+}
+.misconception .fact p{margin:0;font-size:13px;color:var(--muted);line-height:1.5;}
+.misconception .fact p b{color:var(--text);}
+
+/* ============================================================
+   DEVELOPER / SUPPORT
+   ============================================================ */
+.dev-card{
+  background:linear-gradient(160deg,#0B5FA5 0%,#08497F 100%);
+  color:#fff;border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.dev-card::after{
+  content:"";position:absolute;right:-30px;bottom:-30px;
+  width:120px;height:120px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+}
+.dev-card .eyebrow{
+  font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  opacity:.85;font-weight:700;position:relative;
+}
+.dev-card h3{
+  margin:8px 0 8px;font-size:16px;font-weight:700;line-height:1.3;
+  position:relative;
+}
+.dev-card p{
+  margin:0;font-size:12.5px;opacity:.92;line-height:1.55;
+  position:relative;
+}
+.dev-card p + p{margin-top:8px;}
+.dev-card .sig{
+  margin-top:12px;font-size:12px;font-style:italic;opacity:.85;
+  position:relative;
+}
+
+.support-toggle{
+  width:100%;border:0;border-radius:var(--radius);
+  padding:15px 14px;margin-top:10px;
+  background:linear-gradient(135deg,#B26A00 0%,#7A4900 100%);
+  color:#fff;font-family:inherit;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow);
+  transition:transform .1s;
+  text-align:left;
+}
+.support-toggle:active{transform:scale(.985);}
+.support-toggle .st-ico{
+  width:38px;height:38px;flex:none;border-radius:12px;
+  background:rgba(255,255,255,.18);
+  display:grid;place-items:center;font-size:18px;
+}
+.support-toggle .st-text{flex:1;min-width:0;}
+.support-toggle .st-text strong{
+  display:block;font-size:14px;font-weight:700;
+  letter-spacing:.01em;margin-bottom:2px;
+}
+.support-toggle .st-text span{display:block;font-size:11.5px;opacity:.85;}
+.support-toggle .st-chev{
+  width:20px;height:20px;fill:#fff;flex:none;
+  transition:transform .25s;
+}
+.support-toggle.open .st-chev{transform:rotate(180deg);}
+
+.support-panel{
+  max-height:0;overflow:hidden;
+  transition:max-height .35s ease, opacity .25s ease, margin-top .25s ease;
+  opacity:0;margin-top:0;
+}
+.support-panel.open{
+  max-height:1600px;opacity:1;margin-top:12px;
+}
+
+.crypto-box{
+  background:#F8FAFC;border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:12px;margin-bottom:10px;
+  transition:background .35s ease;
+}
+body.dark .crypto-box{background:#131C25;}
+.crypto-box .coin-head{
+  display:flex;align-items:center;gap:9px;margin-bottom:9px;
+}
+.crypto-box .coin-head .coin-ico{
+  width:30px;height:30px;border-radius:50%;flex:none;
+  display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff;
+}
+.coin-ico.btc{background:#F7931A;}
+.coin-ico.bch{background:#8DC351;}
+.coin-ico.xrp{background:#23292F;}
+.crypto-box .coin-head b{font-size:13.5px;font-weight:700;}
+.crypto-box .coin-head span{font-size:11px;color:var(--muted);margin-left:auto;}
+
+.addr-wrap{
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:var(--radius-sm);padding:9px 11px;
+  transition:background .35s ease;
+}
+body.dark .addr-wrap{background:#18222D;}
+.addr{
+  flex:1;min-width:0;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:11.5px;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.copy-btn{
+  flex:none;border:0;border-radius:8px;background:var(--primary-soft);
+  color:var(--primary);font-size:11px;font-weight:700;
+  padding:7px 10px;font-family:inherit;cursor:pointer;
+  transition:background .15s, transform .12s;
+  position:relative;z-index:1;
+}
+.copy-btn:active{transform:scale(.95);}
+.copy-btn.done{background:var(--safe);color:#fff;}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+.theme-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;margin-bottom:10px;
+  box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:12px;
+  transition:background .35s ease, border-color .35s ease;
+}
+.theme-card .theme-icon{
+  width:44px;height:44px;flex:none;border-radius:12px;
+  background:var(--primary-soft);color:var(--primary);
+  display:grid;place-items:center;font-size:22px;
+  transition:background .35s ease, color .35s ease, transform .3s ease;
+}
+.theme-card .theme-info{flex:1;min-width:0;}
+.theme-card .theme-info strong{
+  display:block;font-size:14px;font-weight:700;margin-bottom:2px;
+}
+.theme-card .theme-info span{
+  display:block;font-size:12px;color:var(--muted);
+  line-height:1.45;
+}
+
+/* ============================================================
+   TEXT SIZE OPTIONS
+   ============================================================ */
+.text-size-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px;
+  margin-bottom:10px;
+  box-shadow:var(--shadow);
+  transition:background .35s ease, border-color .35s ease;
+}
+.text-size-head{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:12px;
+}
+.text-size-icon{
+  width:44px;height:44px;flex:none;
+  border-radius:12px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  display:grid;place-items:center;
+  font-size:17px;font-weight:800;
+  font-family:Georgia,"Times New Roman",serif;
+  letter-spacing:-.02em;
+  transition:background .35s ease, color .35s ease;
+}
+.text-size-info{flex:1;min-width:0;}
+.text-size-info strong{
+  display:block;font-size:14px;font-weight:700;margin-bottom:2px;
+}
+.text-size-info span{
+  display:block;font-size:12px;color:var(--muted);
+  line-height:1.45;
+}
+
+.text-size-options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  background:#E8EDF2;
+  border-radius:12px;
+  padding:4px;
+  transition:background .35s ease;
+}
+body.dark .text-size-options{background:#131C25;}
+
+.text-size-options button{
+  border:0;
+  background:transparent;
+  border-radius:9px;
+  padding:10px 4px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--muted);
+  font-family:inherit;
+  cursor:pointer;
+  transition:background .15s, color .15s, transform .1s;
+}
+.text-size-options button:active{transform:scale(.97);}
+.text-size-options button.active{
+  background:var(--surface);
+  color:var(--primary);
+  box-shadow:0 1px 4px rgba(16,32,48,.12);
+}
+
+/* ============================================================
+   TEXT SIZE SCALING — applies to screen content only
+   ============================================================ */
+body.text-small .screen{zoom:.9;}
+body.text-medium .screen{zoom:1;}
+body.text-large .screen{zoom:1.15;}
+
+/* Soften the entrance animation so it plays nicely with zoom */
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* ============================================================
+   COLLAPSIBLE CARDS — used for Acknowledgements & App Info
+   ============================================================ */
+.collapsible-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  margin-bottom:10px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  transition:border-color .25s ease, background .35s ease;
+}
+.collapsible-card.open{
+  border-color:var(--primary-soft);
+}
+
+.collapsible-header{
+  width:100%;
+  border:0;
+  background:transparent;
+  padding:14px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-align:left;
+  cursor:pointer;
+  font-family:inherit;
+  color:inherit;
+  transition:background .15s;
+}
+.collapsible-header:active{
+  background:var(--primary-soft);
+}
+body.dark .collapsible-header:active{
+  background:rgba(27,50,71,.5);
+}
+
+.collapsible-ico{
+  width:38px;height:38px;flex:none;
+  border-radius:11px;
+  background:var(--primary-soft);
+  color:var(--primary);
+  display:grid;place-items:center;
+  font-size:18px;
+}
+.collapsible-title{flex:1;min-width:0;}
+.collapsible-title strong{
+  display:block;
+  font-size:14px;
+  font-weight:700;
+  margin-bottom:2px;
+  color:var(--text);
+  line-height:1.35;
+}
+.collapsible-title span{
+  display:block;
+  font-size:11.5px;
+  color:var(--muted);
+  line-height:1.4;
+}
+
+.collapsible-chev{
+  width:20px;height:20px;
+  flex:none;
+  fill:var(--muted);
+  transition:transform .3s ease;
+}
+.collapsible-card.open .collapsible-chev{
+  transform:rotate(180deg);
+}
+.collapsible-body .ecard-row:last-child{
+  margin-bottom:0;
+}
+.collapsible-body{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  padding:0 14px;
+  transition:max-height .4s cubic-bezier(.22,1,.36,1),
+             opacity .28s ease,
+             padding .3s ease;
+}
+.collapsible-card.open .collapsible-body{
+  max-height:1600px;
+  opacity:1;
+  padding:0 14px 14px;
+}
+.collapsible-body p{
+  margin:0;
+  font-size:13px;
+  color:var(--muted);
+  line-height:1.6;
+}
+.collapsible-body p + p{margin-top:8px;}
+.collapsible-body b{color:var(--text);}
+
+.switch{
+  flex:none;position:relative;width:52px;height:30px;
+  border-radius:99px;cursor:pointer;
+  background:#CBD5E0;
+  transition:background .3s ease;
+  border:0;padding:0;
+}
+.switch::after{
+  content:"";position:absolute;top:3px;left:3px;
+  width:24px;height:24px;border-radius:50%;
+  background:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.22);
+  transition:transform .3s cubic-bezier(.22,1,.36,1), background .3s ease;
+}
+.switch.on{background:var(--primary);}
+.switch.on::after{transform:translateX(22px);background:#0F1720;}
+
+.switch .knob-icon{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:12px;line-height:1;
+  pointer-events:none;
+  transition:opacity .25s ease;
+}
+.switch .knob-icon.sun{left:3px;top:3px;transform:none;width:24px;height:24px;
+  display:grid;place-items:center;color:#B26A00;opacity:1;}
+.switch .knob-icon.moon{left:25px;top:3px;transform:none;width:24px;height:24px;
+  display:grid;place-items:center;color:#8AB4F8;opacity:0;}
+.switch.on .knob-icon.sun{opacity:0;}
+.switch.on .knob-icon.moon{opacity:1;}
+
+/* ============================================================
+   BOTTOM NAV
+   ============================================================ */
+.bottomnav{
+  position:fixed;inset:auto 0 0 0;z-index:50;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+  padding-bottom:env(safe-area-inset-bottom);
+  display:grid;grid-template-columns:repeat(5,1fr);
+  background:var(--surface);border-top:1px solid var(--border);
+  box-shadow:0 -2px 12px rgba(16,32,48,.07);
+  transition:background .35s ease, border-color .35s ease;
+}
+.navbtn{
+  border:0;background:transparent;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  color:var(--muted);font-size:10.5px;font-weight:600;
+  font-family:inherit;padding:0;position:relative;
+  transition:color .15s;
+}
+.navbtn svg{width:22px;height:22px;fill:currentColor;transition:transform .15s;}
+.navbtn.active{color:var(--primary);}
+.navbtn.active svg{transform:translateY(-1px);}
+.navbtn.active::before{
+  content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  width:34px;height:3px;border-radius:0 0 3px 3px;background:var(--primary);
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.muted{color:var(--muted);font-size:12.5px;}
+.center{text-align:center;}
+.mt8{margin-top:8px;}
+.mt16{margin-top:16px;}
+
+.version-footer{
+  margin-top:18px;
+  padding:14px 12px;
+  text-align:center;
+  border-top:1px dashed var(--border);
+}
+.version-footer .app-name{
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--primary-dark);
+  letter-spacing:.01em;
+  line-height:1.45;
+  margin-bottom:6px;
+}
+body.dark .version-footer .app-name{color:#8AB4F8;}
+.version-footer .dev-name{
+  font-size:12.5px;
+  font-style:italic;
+  color:var(--muted);
+  letter-spacing:.01em;
+}
+
+body.dark{
+  --bg:#0F1720; --surface:#18222D; --text:#E8EEF4;
+  --muted:#93A3B3; --border:#26333F; --primary-soft:#1B3247;
+  --danger-soft:#3A1D1D; --warn-soft:#382C15; --safe-soft:#17301A;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.25);
+}
+body.dark .segmented{background:#131C25;}
+body.dark .photo{background:#131C25;border-color:#2E3D4B;}
+body.dark .aware,
+body.dark .bomber-card{background:var(--surface);}
+body.dark .chip{background:#212E3A;}
+body.dark .contact-input{background:#131C25;color:var(--text);}
+body.dark .contact-input:focus{background:#18222D;}
+body.dark .magic-word-box{background:#131C25;}
+body.dark .misconception .myth{border-bottom-color:#4A2626;}
+body.dark .contacts-sheet{background:var(--bg);}
+body.dark .indicator-item{background:var(--surface);}
+body.dark .special-card{background:var(--surface);}
+body.dark .role-block{background:var(--surface);}
+body.dark .video-card{background:var(--surface);}
+body.dark .video-info h5{color:var(--text);}
+
+#confettiLayer{
+  position:fixed;inset:0;pointer-events:none;
+  z-index:9999;overflow:hidden;
+}
+.confetti-piece{
+  position:absolute;width:9px;height:14px;
+  will-change:transform,opacity;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translate3d(0,0,0) rotate(0deg);opacity:1;}
+  100%{transform:translate3d(var(--dx,0),var(--dy,400px),0) rotate(var(--rot,540deg));opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div id="confettiLayer" aria-hidden="true"></div>
+
+<header class="appbar">
+  <div class="brand">
+    <div class="logo">🛡️</div>
+    <div style="min-width:0">
+      <h1 id="appTitle">Bomb Threat Guide</h1>
+      <div class="sub">For Teachers &amp; School Personnel</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME -->
+  <section id="screen-home" class="screen active">
+    <div class="hero">
+      <div class="eyebrow">DepEd DRRMO Educational Tool</div>
+      <h2>Bomb Threat Preparedness &amp; Response</h2>
+      <p>A comprehensive guide for teachers and school heads — before, during, and after a bomb threat. This guide covers school personnel duties only. It stops where Explosive Ordnance Disposal (EOD) and law enforcement assume control.</p>
+
+      <div class="hero-actions">
+        <button onclick="go('procedures'); setProcTab('before')">
+          <span class="dot" style="background:#8ED1FF"></span> Before
+        </button>
+        <button onclick="go('procedures'); setProcTab('during')">
+          <span class="dot" style="background:#FFB4B4"></span> During
+        </button>
+        <button onclick="go('procedures'); setProcTab('after')">
+          <span class="dot" style="background:#A8E6A8"></span> After
+        </button>
+      </div>
+    </div>
+
+    <div class="prep-notice">
+      <div class="head">
+        <div class="badge">⚠️</div>
+        <h3>Before Using This App</h3>
+      </div>
+      <p>Make sure your school has the following prepared:</p>
+      <ul>
+        <li><span class="em">School-Based Contingency Plan for Bomb Threat</span></li>
+        <li><span class="em">Bomb Threat Incident Planning</span></li>
+      </ul>
+      <p style="margin-top:8px">
+        These documents contain the whole details that the teaching staff will and should only know.
+        They must be kept confidential to <span class="em">avoid leakage of the plan and safety protocols</span>.
+      </p>
+    </div>
+
+    <div class="section-title">Reference Library</div>
+    <div class="grid-2">
+      <button class="tile" onclick="go('reference'); openAcc('acc-roles')">
+        <div class="ico">👥</div>
+        <h3>Roles &amp; Responsibilities</h3>
+        <span>Who does what</span>
+      </button>
+      <button class="tile" onclick="go('reference'); openAcc('acc-special')">
+        <div class="ico">🎭</div>
+        <h3>Special Situations</h3>
+        <span>10 scenario guides</span>
+      </button>
+      <button class="tile" onclick="go('reference'); openAcc('acc-terms')">
+        <div class="ico">📖</div>
+        <h3>Terms &amp; Definitions</h3>
+        <span>Bomb, threat, EOD, DRRM, IED</span>
+      </button>
+      <button class="tile" onclick="go('reference'); openAcc('acc-laws')">
+        <div class="ico">⚖️</div>
+        <h3>Laws &amp; DepEd Orders</h3>
+        <span>PD 1727, RA 11479, RPC</span>
+      </button>
+      <button class="tile" onclick="go('reference'); openAcc('acc-indicators')">
+        <div class="ico">👁️</div>
+        <h3>Suspicious Indicators</h3>
+        <span>What to look out for</span>
+      </button>
+      <button class="tile" onclick="go('reference'); openAcc('acc-vulnerable')">
+        <div class="ico">📍</div>
+        <h3>Vulnerable Areas</h3>
+        <span>High, medium, low risk zones</span>
+      </button>
+      <button class="tile" onclick="go('reference'); openAcc('acc-bombers')">
+        <div class="ico">🕵️</div>
+        <h3>Who Are Possible Bombers</h3>
+        <span>Threat actor profiles</span>
+      </button>
+      <button class="tile" onclick="go('reference'); openAcc('acc-bomb')">
+        <div class="ico">🧨</div>
+        <h3>Bomb Items</h3>
+        <span>Image awareness guide</span>
+      </button>
+    </div>
+
+    <div class="section-title">Your Role</div>
+    <div class="card" onclick="go('procedures')" style="cursor:pointer">
+      <h3>👩‍🏫 Teacher &amp; School Head Responsibilities</h3>
+      <p>Step-by-step actions from the moment a threat is received until EOD and law enforcement take over.</p>
+    </div>
+    <div class="card" onclick="go('remember')" style="cursor:pointer">
+      <h3>🧠 Most Important Things to Remember</h3>
+      <p>Critical reminders for school staff during bomb threats — plus common misconceptions corrected.</p>
+    </div>
+  </section>
+
+  <!-- PROCEDURES -->
+  <section id="screen-procedures" class="screen">
+    <div class="segmented" id="procSeg">
+      <button data-tab="before" class="active" onclick="setProcTab('before')">Before</button>
+      <button data-tab="during" onclick="setProcTab('during')">During</button>
+      <button data-tab="after"  onclick="setProcTab('after')">After</button>
+    </div>
+
+    <div class="panel active" id="panel-before">
+      <div class="callout safe" style="margin-bottom:14px">
+        <b>Goal</b>
+        Build capacity so the school responds automatically, not emotionally.
+      </div>
+      <div class="step"><div class="num">1</div><div class="body"><h4>Know the pre-attack indicators</h4><p>Unusual packages, unfamiliar persons loitering, repeated questions about schedules, or sudden changes in a student's behavior.</p></div></div>
+      <div class="step"><div class="num">2</div><div class="body"><h4>Know your School Contingency Plan</h4><p>Evacuation routes, assembly areas, lockdown rooms, and the chain of command must be localized and posted in every classroom.</p></div></div>
+      <div class="step"><div class="num">3</div><div class="body"><h4>Participate in drills</h4><p>Lockdown, lockout, and evacuation drills at least twice per school year. Treat every drill as real.</p></div></div>
+      <div class="step"><div class="num">4</div><div class="body"><h4>Prepare your class go-bag</h4><p>Class roster, emergency contacts, flashlight, whistle, first-aid kit, and a printed copy of this guide.</p></div></div>
+      <div class="step"><div class="num">5</div><div class="body"><h4>Establish reporting lines</h4><p>Every teacher must know who to call first — the school head, the DRRM coordinator, and the local PNP station.</p></div></div>
+      <div class="callout warn"><b>Reminder</b>Never assign a student to investigate a suspicious item — ever.</div>
+    </div>
+
+    <div class="panel" id="panel-during">
+      <div class="callout danger" style="margin-bottom:14px">
+        <b>Golden Rule</b>
+        Do not touch, move, or cover any suspicious object. Report and secure.
+      </div>
+      <div class="step danger"><div class="num">1</div><div class="body"><h4>Stay calm and do not cut off the caller</h4><p>If the threat is by phone, keep the caller talking. Note the exact words, background noise, voice, and time.</p>
+        <a class="readmore" href="https://www.cisa.gov/sites/default/files/2025-08/Bomb_Threat_Checklist_082025_508.pdf" target="_blank" rel="noopener noreferrer">📄 Read CISA Bomb Threat Checklist<svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7v-2z"/></svg></a>
+      </div></div>
+      <div class="step danger"><div class="num">2</div><div class="body"><h4>Do not touch or move any suspicious item</h4><p>Do not use radios or mobile phones near it. Do not cover it. Do not place it in water.</p></div></div>
+      <div class="step danger"><div class="num">3</div><div class="body"><h4>Alert the school head / DRRM coordinator</h4><p>Use the pre-arranged signal. Do not spread panic among students.</p></div></div>
+      <div class="step danger"><div class="num">4</div><div class="body"><h4>Decide: Lockdown or Evacuate</h4><p><b>Threat inside</b> → Lockdown (RUN–HIDE–FIGHT).<br><b>Threat outside</b> → Lockout; secure gates, no movement in or out.</p></div></div>
+      <div class="step danger"><div class="num">5</div><div class="body"><h4>Call 911 / local PNP station</h4><p>Give clear information: school name, exact location, description of the item, number of people present.</p></div></div>
+      <div class="step danger"><div class="num">6</div><div class="body"><h4>Account for your students</h4><p>Headcount against your class roster. Report missing or unaccounted students immediately.</p></div></div>
+      <div class="handoff">
+        <span class="tag">Your Role Ends Here</span>
+        <h4>Handoff to EOD &amp; Law Enforcement</h4>
+        <p>Once EOD and the PNP arrive, surrender the area, provide your report, and follow their instructions. Do not re-enter the building until the official ALL CLEAR is given.</p>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-after">
+      <div class="callout safe" style="margin-bottom:14px">
+        <b>Goal</b>
+        Restore safety, account for everyone, and learn from the incident.
+      </div>
+      <div class="step"><div class="num">1</div><div class="body"><h4>Wait for the official ALL CLEAR</h4><p>Only EOD or the incident commander can declare the area safe. Never assume.</p></div></div>
+      <div class="step"><div class="num">2</div><div class="body"><h4>Provide Psychological First Aid (PFA)</h4><p>Calm, comfort, and connect students to support. Watch for acute stress reactions.</p></div></div>
+      <div class="step"><div class="num">3</div><div class="body"><h4>Conduct headcount and medical triage</h4><p>Re-account for all students and staff. Refer injuries to the school nurse or medical team.</p></div></div>
+      <div class="step"><div class="num">4</div><div class="body"><h4>Debrief and document</h4><p>Record what happened, what worked, and what failed. Submit the incident report to the school head and Division DRRM coordinator.</p></div></div>
+      <div class="step"><div class="num">5</div><div class="body"><h4>Review and improve the plan</h4><p>Update the contingency plan, retrain personnel, and schedule the next drill.</p></div></div>
+      <div class="callout warn"><b>Do not</b>Do not post unverified information on social media. Do not name suspects or victims.</div>
+    </div>
+  </section>
+
+  <!-- REFERENCE -->
+  <section id="screen-reference" class="screen">
+        <!-- ============================================================
+         EMERGENCY CONTACTS LIST HEADER
+         ============================================================ -->
+    <div class="section-title" style="margin-top:4px">Emergency Contacts</div>
+
+     <!-- ============================================================
+         EMERGENCY CONTACTS LIST (COLLAPSIBLE)
+         ============================================================ -->
+    <div class="collapsible-card" id="collab-emergency" style="margin-top:4px">
+      <button class="collapsible-header" onclick="toggleCollapsible('collab-emergency')" aria-expanded="false">
+        <div class="collapsible-ico">📞</div>
+        <div class="collapsible-title">
+          <strong>Emergency Contacts</strong>
+          <span>Save your school's BFP, PNP, Rescue, and DRRMO numbers</span>
+        </div>
+        <svg class="collapsible-chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </button>
+
+      <div class="collapsible-body">
+
+        <div class="ecard-row" data-key="bfp">
+          <div class="label"><span class="ico-sm">🚒</span> Bureau of Fire Protection (BFP)</div>
+          <div class="ecard-input-wrap">
+            <input type="tel" class="ecard-input" placeholder="e.g. 0917 123 4567" inputmode="tel">
+            <button class="ecard-btn ecard-save" onclick="saveEmergencyContact('bfp', this)">💾 Save</button>
+            <button class="ecard-btn ecard-copy" onclick="copyEmergencyContact('bfp', this, event)">Copy</button>
+          </div>
+          <div class="ecard-saved-note">✓ Saved on this device</div>
+        </div>
+
+        <div class="ecard-row" data-key="pnp">
+          <div class="label"><span class="ico-sm">👮</span> Local PNP Station</div>
+          <div class="ecard-input-wrap">
+            <input type="tel" class="ecard-input" placeholder="e.g. 0917 123 4567" inputmode="tel">
+            <button class="ecard-btn ecard-save" onclick="saveEmergencyContact('pnp', this)">💾 Save</button>
+            <button class="ecard-btn ecard-copy" onclick="copyEmergencyContact('pnp', this, event)">Copy</button>
+          </div>
+          <div class="ecard-saved-note">✓ Saved on this device</div>
+        </div>
+
+        <div class="ecard-row" data-key="rescue">
+          <div class="label"><span class="ico-sm">🚑</span> Rescue Team</div>
+          <div class="ecard-input-wrap">
+            <input type="tel" class="ecard-input" placeholder="e.g. 0917 123 4567" inputmode="tel">
+            <button class="ecard-btn ecard-save" onclick="saveEmergencyContact('rescue', this)">💾 Save</button>
+            <button class="ecard-btn ecard-copy" onclick="copyEmergencyContact('rescue', this, event)">Copy</button>
+          </div>
+          <div class="ecard-saved-note">✓ Saved on this device</div>
+        </div>
+
+        <div class="ecard-row" data-key="mdrrmo">
+          <div class="label"><span class="ico-sm">🏛️</span> Municipal DRRMO</div>
+          <div class="ecard-input-wrap">
+            <input type="tel" class="ecard-input" placeholder="e.g. 0917 123 4567" inputmode="tel">
+            <button class="ecard-btn ecard-save" onclick="saveEmergencyContact('mdrrmo', this)">💾 Save</button>
+            <button class="ecard-btn ecard-copy" onclick="copyEmergencyContact('mdrrmo', this, event)">Copy</button>
+          </div>
+          <div class="ecard-saved-note">✓ Saved on this device</div>
+        </div>
+
+      </div>
+    </div>
+    <!-- ============================================================
+         KNOWLEDGE BASE
+         ============================================================ -->
+    <div class="section-title" style="margin-top:4px">Knowledge Base</div>
+
+    <details class="acc" id="acc-roles">
+      <summary>
+        <span class="ico">👥</span> Roles &amp; Responsibilities
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+        <div class="roles-intro">
+          <h4>🧩 Every role has a purpose</h4>
+          <p>In a bomb threat, confusion costs lives. Knowing exactly what each person is responsible for — and what they are not — keeps the response clean and prevents overlap.</p>
+        </div>
+
+        <div class="role-block head">
+          <div class="role-head"><div class="role-ico">🏫</div><h4>School Head</h4></div>
+          <div class="role-body">
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Decision-making</h5><p>Decides whether to lockdown, evacuate, or lockout. Holds final authority on all school-level decisions until EOD and law enforcement take over.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Authority coordination</h5><p>Serves as the single point of contact for PNP, BFP, DRRMO, and other responding agencies. Escalates to EOD when needed.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Official communication</h5><p>Issues all official statements to parents, the community, and the media. Approves any information released beyond the school gate.</p></div></div>
+          </div>
+        </div>
+
+        <div class="role-block drrm">
+          <div class="role-head"><div class="role-ico">📋</div><h4>DRRM Coordinator</h4></div>
+          <div class="role-body">
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Emergency coordination</h5><p>Activates the school contingency plan, coordinates staff assignments, and serves as the bridge between the school head and response units.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Information management</h5><p>Receives and consolidates all reports from teachers and staff. Keeps the official incident log: what happened, when, where, and who reported it.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Evacuation / accountability monitoring</h5><p>Tracks the status of each class and each evacuation site. Confirms that all groups have moved and been accounted for.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Documentation</h5><p>Prepares the incident report after the response. Ensures all evidence, statements, and timestamps are properly recorded for authorities.</p></div></div>
+          </div>
+        </div>
+
+        <div class="role-block teacher">
+          <div class="role-head"><div class="role-ico">👩‍🏫</div><h4>Teachers</h4></div>
+          <div class="role-body">
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Learner safety</h5><p>Keep learners calm and secure. Never leave the class unattended during a threat. Use the magic word for orderly movement.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Evacuation</h5><p>Lead the class along pre-planned routes to the designated evacuation area. Do not improvise or take shortcuts.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Headcount</h5><p>Conduct a roll call by name — not just a number count — at the assembly point. Pair learners with buddies for faster checking.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Reporting missing / injured learners</h5><p>Immediately report any unaccounted or injured learner to the DRRM coordinator. Do not send students to search.</p></div></div>
+          </div>
+        </div>
+
+        <div class="role-block security">
+          <div class="role-head"><div class="role-ico">🛡️</div><h4>Security / Utility Personnel</h4></div>
+          <div class="role-body">
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Restrict access</h5><p>Secure all gates. Prevent entry of unauthorized persons and prevent anyone from leaving with a student unless authorized.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Report suspicious observations</h5><p>Report any suspicious persons, vehicles, or objects to the school head. Do not investigate or approach.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Assist with controlled movement</h5><p>Guide traffic, keep corridors clear, and support evacuating classes without causing panic or congestion.</p></div></div>
+          </div>
+        </div>
+
+        <div class="role-block learner">
+          <div class="role-head"><div class="role-ico">🎒</div><h4>Learners</h4></div>
+          <div class="role-body">
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Follow instructions</h5><p>Listen to the teacher, move quietly and in order, and stay with the class. Do not run, shout, or wander off.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Do not touch suspicious objects</h5><p>Never pick up, open, kick, or cover any unattended bag, box, or item — even if it looks harmless.</p></div></div>
+            <div class="duty"><span class="duty-dot"></span><div class="duty-body"><h5>Report suspicious items or threats</h5><p>Tell a teacher or any school staff immediately if they see something strange or hear anyone talking about a bomb.</p></div></div>
+          </div>
+        </div>
+
+        <div class="callout info">
+          <b>Key principle</b>
+          Everyone stays in their lane. The school head decides, the DRRM coordinator coordinates, the teachers protect learners, the security keeps the perimeter, and the learners follow. No one improvises a role they were not trained for.
+        </div>
+      </div>
+    </details>
+
+    <details class="acc" id="acc-special">
+      <summary>
+        <span class="ico">🎭</span> Special Situations
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+        <div class="special-intro">
+          <h4>🎯 Bomb threats don't always happen at a convenient time</h4>
+          <p>Different school activities mean different crowds, different ages, and different risks. Each situation below needs a slightly adjusted response — but the core rules never change: do not touch, do not panic, evacuate calmly, and hand off to EOD.</p>
+        </div>
+
+        <div class="special-card exam">
+          <div class="sc-head"><div class="sc-ico">📝</div><h5>Bomb Threat During Examination</h5></div>
+          <p>Stop the exam immediately. Do not allow students to bring answer sheets or test papers — evacuate as-is. Silent signal to proctors to avoid disruption. No student should be left in the testing room, and no paper should be collected mid-evacuation.</p>
+        </div>
+
+        <div class="special-card flag">
+          <div class="sc-head"><div class="sc-ico">🇵🇭</div><h5>Bomb Threat During Flag Ceremony</h5></div>
+          <p>All learners are already assembled outdoors, which is an advantage. Teachers quickly form their classes and move to the alternate evacuation site — not the usual one, in case the ceremony area was the target. Maintain silence, dismiss by class, and avoid a stampede.</p>
+        </div>
+
+        <div class="special-card grad">
+          <div class="sc-head"><div class="sc-ico">🎓</div><h5>Bomb Threat During Graduation</h5></div>
+          <p>Guests, parents, and VIPs are present — crowd control is the biggest risk. The school head or emcee calmly announces a short break or "photo opportunity" to avoid panic. Marshals guide guests to designated exits. Do not release students to parents until the official reunification point is set up.</p>
+        </div>
+
+        <div class="special-card sports">
+          <div class="sc-head"><div class="sc-ico">🏀</div><h5>Bomb Threat During Sports Events</h5></div>
+          <p>Multiple schools or teams may be present. Coordinate with the event organizer and other coaches. Stop the game immediately. Clear the courts and bleachers in an orderly manner. Spectators exit first, athletes follow. Do not use the same exit for everyone.</p>
+        </div>
+
+        <div class="special-card parents">
+          <div class="sc-head"><div class="sc-ico">👨‍👩‍👧</div><h5>Bomb Threat During Parent Activities</h5></div>
+          <p>Many unfamiliar adults are on campus. Adults must be guided firmly but calmly to the designated exit — they may want to retrieve their own children or belongings. Announce that students will be released through the official reunification process only. Parents should not block gates or rush to classrooms.</p>
+        </div>
+
+        <div class="special-card lunch">
+          <div class="sc-head"><div class="sc-ico">🍽️</div><h5>Bomb Threat During Lunch / Recess</h5></div>
+          <p>Students are scattered — canteen, hallways, comfort rooms, playground. This is one of the hardest situations to manage. Teachers must sweep their assigned zones quickly and gather students at class meeting points before moving. Canteen staff secure equipment and turn off gas. Do not let students run back for food or bags.</p>
+        </div>
+
+        <div class="special-card outside">
+          <div class="sc-head"><div class="sc-ico">🌙</div><h5>Bomb Threat Outside School Hours</h5></div>
+          <p>Only guards, janitors, and possibly some teachers are on campus. The school head or duty officer decides whether to evacuate or stand by. Secure the area, deny entry, and wait for authorities. Do not enter the building to check anything alone. Notify the DRRM coordinator remotely.</p>
+        </div>
+
+        <div class="special-card weather">
+          <div class="sc-head"><div class="sc-ico">⛈️</div><h5>Threat During Severe Weather</h5></div>
+          <p>Evacuating into a storm can be more dangerous than the threat itself. If there is heavy rain, strong wind, or flooding, consider lockdown in place until the weather clears — but keep students away from windows. The school head decides. Prioritize whichever risk is immediate.</p>
+        </div>
+
+        <div class="special-card quake">
+          <div class="sc-head"><div class="sc-ico">🌋</div><h5>Threat During Earthquake / Fire Response</h5></div>
+          <p>If an earthquake or fire is already happening, that is the primary emergency — deal with it first. Do not attempt to carry out two evacuation plans at once. Once students are safe from the primary hazard, address the bomb threat with the same protocol: report, secure, wait for EOD.</p>
+        </div>
+
+        <div class="special-card already-out">
+          <div class="sc-head"><div class="sc-ico">🏕️</div><h5>Threat When Learners Are Already Outside</h5></div>
+          <p>This is the safest scenario — do not send learners back into the building. Keep them where they are, take a roll call by name, and move them further away if the threat zone is close. Hand off to EOD from the outdoor holding area. Re-entry only after the official ALL CLEAR.</p>
+        </div>
+
+        <div class="callout warn">
+          <b>Universal reminder</b>
+          No matter what activity is happening, the same core rules apply: <b>do not touch suspicious items, keep learners calm, do not improvise evacuation routes, and stop where EOD and law enforcement take over.</b>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc" id="acc-terms">
+      <summary>
+        <span class="ico">📖</span> Terms &amp; Definitions
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+        <div class="def"><b>Bomb</b><span>An explosive device designed to cause damage, injury, or death.</span></div>
+        <div class="def"><b>Bomb Threat</b><span>A communicated warning — verbal, written, or digital — that an explosive device will be detonated.</span></div>
+        <div class="def"><b>Bomb Joke</b><span>A false statement about a bomb. It is a criminal offense in the Philippines, not a prank.</span></div>
+        <div class="def"><b>False Alarm</b><span>A threat reported but no explosive device is found. Still requires full response and investigation.</span></div>
+        <div class="def"><b>Bombing</b><span>The actual detonation of an explosive device.</span></div>
+        <div class="def"><b>EOD (Explosive Ordnance Disposal)</b><span>The specialized unit trained to safely identify, disarm, and dispose of explosive devices. Once EOD arrives, the school's direct role ends and the scene is handed over to them.</span></div>
+        <div class="def"><b>DRRM (Disaster Risk Reduction and Management)</b><span>The framework and coordinated efforts — planning, preparedness, response, and recovery — used by schools and government to reduce the impact of disasters and emergencies, including bomb threats.</span></div>
+        <div class="def"><b>IED (Improvised Explosive Device)</b><span>A homemade bomb assembled from common materials and often disguised as everyday objects. Common components include mobile phone triggers, wires, batteries, and ammonium nitrate fuel oil (ANFO).</span></div>
+      </div>
+    </details>
+
+    <details class="acc" id="acc-laws">
+      <summary>
+        <span class="ico">⚖️</span> Philippine Legalities &amp; DepEd Orders
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+
+        <div class="legal-group">
+          <div class="group-head"><span class="emoji">📘</span> DepEd Orders</div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 006, s. 2026</b>
+            <span class="full-title">Guidelines on Ensuring a Safe and Motivating Learning Environment (ESMLE)</span>
+            <span class="desc">Sets the standards for a safe, inclusive, and motivating learning environment. Classifies bomb threats and bomb jokes as third-level offenses with corresponding sanctions.</span>
+            <span class="tagline danger">Bomb threat: 3rd-level offense</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 28, s. 2024</b>
+            <span class="full-title">Guidelines on the Cancellation or Suspension of Classes and Work in Times of Natural Disasters and Other Calamities</span>
+            <span class="desc">Defines when classes and work may be suspended or cancelled due to calamities. Includes the protocol for declaring suspension and the responsibility of school heads.</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 33, s. 2021</b>
+            <span class="full-title">Guidelines on the Implementation of Alert Levels System for COVID-19 Response in the Basic Education Sector</span>
+            <span class="desc">Establishes the alert-level framework used during public health emergencies. Provides a working model for tiered school response that can be adapted to other emergencies.</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 37, s. 2015</b>
+            <span class="full-title">Comprehensive Disaster Risk Reduction and Management in Basic Education Framework</span>
+            <span class="desc">The foundational DRRM framework for all DepEd schools. Covers prevention, mitigation, preparedness, response, and recovery — including bomb threat planning.</span>
+            <span class="tagline">Core DRRM framework</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 23, s. 2015</b>
+            <span class="full-title">Student-Led School Watching and Hazard Mapping</span>
+            <span class="desc">Requires schools to conduct student-led hazard mapping. Helps identify vulnerabilities — including areas where suspicious items could be placed.</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 18, s. 2015</b>
+            <span class="full-title">Guidelines and Procedures on the Management of Children-at-Risk and Children in Conflict with the Law</span>
+            <span class="desc">Provides the procedure for handling students involved in offenses — including those who may have made bomb jokes or threats. Balances accountability with child protection.</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 55, s. 2013</b>
+            <span class="full-title">Implementing Rules and Regulations of Republic Act No. 10627 (Anti-Bullying Act of 2013)</span>
+            <span class="desc">Establishes the anti-bullying framework. Relevant to bomb threats that are also a form of intimidation or harassment.</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 40, s. 2012</b>
+            <span class="full-title">DepEd Child Protection Policy</span>
+            <span class="desc">The overarching child protection policy. Mandates zero tolerance for any act that endangers learners, including threats to their safety.</span>
+            <span class="tagline safe">Child protection</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 48, s. 2012</b>
+            <span class="full-title">Quarterly Conduct of the National School-Based Earthquake and Fire Drills</span>
+            <span class="desc">Requires quarterly earthquake and fire drills. The same drill discipline and evacuation logic applies to bomb threat preparedness.</span>
+          </div>
+
+          <div class="legal-item">
+            <b>DepEd Order No. 48, s. 2006</b>
+            <span class="full-title">Observance of Safety Measures in Science Laboratories</span>
+            <span class="desc">Sets safety measures for school laboratories. Important because some bomb-making precursors may be found in or near science lab supplies.</span>
+          </div>
+        </div>
+
+        <div class="legal-group">
+          <div class="group-head"><span class="emoji">📜</span> Presidential Decrees</div>
+
+          <div class="legal-item">
+            <b>Presidential Decree No. 1727</b>
+            <span class="full-title">Declaring as Unlawful the Malicious Dissemination of False Information or the Willful Making of Any Threat Concerning Bombs, Explosives or Any Similar Device or Means of Destruction and Imposing Penalties Therefor</span>
+            <span class="desc">Commonly known as the "Anti-Bomb Joke / Bomb Threat Law." Penalizes making or spreading false bomb threats or bomb jokes. Penalty includes imprisonment and/or fine.</span>
+            <span class="tagline danger">Anti-Bomb Joke Law</span>
+          </div>
+        </div>
+
+        <div class="legal-group">
+          <div class="group-head"><span class="emoji">📕</span> Republic Acts</div>
+
+          <div class="legal-item">
+            <b>Republic Act No. 11479</b>
+            <span class="full-title">The Anti-Terrorism Act of 2020</span>
+            <span class="desc">Defines and penalizes terrorism and related offenses — including "Threat to Commit Terrorism." Covers bomb threats made with the intent to cause widespread fear or harm.</span>
+            <span class="tagline danger">Anti-Terrorism Act</span>
+          </div>
+
+          <div class="legal-item">
+            <b>Republic Act No. 9516</b>
+            <span class="full-title">An Act Further Strengthening the Anti-Terrorism on Firearms, Ammunitions, Explosives, Pertaining Thereto</span>
+            <span class="desc">Strengthens regulations on firearms, ammunition, and explosives. Provides the legal basis for controlling explosive materials that could be used in bombs.</span>
+          </div>
+        </div>
+
+        <div class="legal-group">
+          <div class="group-head"><span class="emoji">⚖️</span> Revised Penal Code</div>
+
+          <div class="legal-item">
+            <b>Revised Penal Code — Article 155</b>
+            <span class="full-title">Alarm and Scandal</span>
+            <span class="desc">Penalizes the causing of alarm or scandal that may disturb public order or cause public danger. Applies to false bomb threats that cause public alarm.</span>
+          </div>
+
+          <div class="legal-item">
+            <b>Revised Penal Code — Articles 282 to 285</b>
+            <span class="full-title">Grave and Light Threats</span>
+            <span class="desc">Defines and penalizes grave threats (Art. 282), other light threats (Art. 283–284), and grave coercion (Art. 285). Applies when a bomb threat is used to intimidate or coerce a specific person or group.</span>
+            <span class="tagline warn">Grave &amp; light threats</span>
+          </div>
+        </div>
+
+      </div>
+    </details>
+
+    <details class="acc" id="acc-indicators">
+      <summary>
+        <span class="ico">👁️</span> Suspicious Indicators — What to Look Out For
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+
+        <div class="indicator-intro">
+          <h4>⚠️ Awareness, not alarm</h4>
+          <p>These are not automatic signs of a bomb — but <b>anything out of place, unexplained, or unusual for its surroundings</b> should be reported to the school head. Do not investigate yourself. Do not touch.</p>
+        </div>
+
+        <div class="indicator-group">
+          <div class="group-head"><span class="emoji">📦</span> Objects &amp; Items</div>
+
+          <div class="indicator-item high"><div class="ind-ico">🎒</div><div class="ind-body"><h5>Unattended bags, backpacks, or boxes</h5><p>Any bag, box, or package left in a hallway, stairwell, restroom, or classroom that no one claims or recognizes.</p></div></div>
+          <div class="indicator-item high"><div class="ind-ico">📬</div><div class="ind-body"><h5>Parcel or item you did not order</h5><p>A package or delivery arriving at the school or a teacher's desk that no one ordered, especially with no return address or a wrong name.</p></div></div>
+          <div class="indicator-item high"><div class="ind-ico">💉</div><div class="ind-body"><h5>Out-of-place item in a strange location</h5><p>Example: a syringe box taped under a chair, a lunchbox inside a fire extinguisher cabinet, or a bottle of liquid in a trash can. <b>Anything that doesn't belong where it is.</b></p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🛍️</div><div class="ind-body"><h5>Hanging plastic or bundle in a random spot</h5><p>A plastic bag or bundle hanging from a ceiling, fence, tree, or gate — where no one would normally hang anything.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">📻</div><div class="ind-body"><h5>Abandoned electronics</h5><p>Radios, phones, laptops, or speakers left behind and still powered on or humming. Electronic devices can be triggers.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🕯️</div><div class="ind-body"><h5>Unusual smell or visible vapor</h5><p>Chemical odor, burnt smell, or visible vapor near a container or area that should not have any. Do not approach — report from a distance.</p></div></div>
+          <div class="indicator-item high"><div class="ind-ico">🔌</div><div class="ind-body"><h5>Exposed wirings or unfamiliar circuits</h5><p>Loose wires, wires taped to surfaces, or wiring that appears recently added and doesn't belong to the school's electrical system.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">📦</div><div class="ind-body"><h5>Taped, sealed, or wrapped containers</h5><p>Buckets, cans, or containers that are unusually taped, wrapped in plastic, or sealed with something other than the original lid.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🎁</div><div class="ind-body"><h5>Unexplained gift or package</h5><p>A gift or box left at a classroom door or staff table without a note, name, or explanation.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">⏱️</div><div class="ind-body"><h5>Audible ticking or beeping</h5><p>A ticking, beeping, or humming sound coming from a bag, box, or area where nothing should be making noise.</p></div></div>
+        </div>
+
+        <div class="indicator-group">
+          <div class="group-head"><span class="emoji">🧍</span> Persons &amp; Behavior</div>
+          <div class="indicator-item"><div class="ind-ico">👀</div><div class="ind-body"><h5>Uneasy or unusual movements</h5><p>A person pacing, sweating, fidgeting, avoiding eye contact, or behaving nervously around a specific area of the school.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🚶</div><div class="ind-body"><h5>Unfamiliar person loitering</h5><p>Someone not in school uniform or without an ID, lingering near entrances, comfort rooms, or areas students do not normally gather.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">📸</div><div class="ind-body"><h5>Photographing or filming exits and hallways</h5><p>A person taking photos or videos of gates, exits, evacuation routes, or security checkpoints without a valid reason.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🗣️</div><div class="ind-body"><h5>Asking about schedules and security</h5><p>Repeated or unusual questions about bell schedules, evacuation drills, security shifts, or which doors are unlocked.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🥷</div><div class="ind-body"><h5>Deliberate concealment</h5><p>A person hiding their face, wearing unusually heavy clothing in warm weather, or carrying a large bag while avoiding contact.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">😰</div><div class="ind-body"><h5>Extreme emotional distress</h5><p>Someone visibly agitated, crying, or making cryptic remarks about "not being around" or "saying goodbye."</p></div></div>
+        </div>
+
+        <div class="indicator-group">
+          <div class="group-head"><span class="emoji">🚗</span> Vehicles</div>
+          <div class="indicator-item high"><div class="ind-ico">🅿️</div><div class="ind-body"><h5>Vehicle parked in an awkward location</h5><p>A car, motorcycle, or tricycle parked unusually close to a building, in front of an exit, or in a spot not designated for parking.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🚚</div><div class="ind-body"><h5>Unfamiliar delivery vehicle</h5><p>A delivery truck or van with no markings, no scheduled delivery, or a driver who refuses to identify themselves or the sender.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🚙</div><div class="ind-body"><h5>Occupied vehicle idling for a long time</h5><p>A car with someone inside that has been parked and running for an unusually long period near the school gate or drop-off zone.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🚘</div><div class="ind-body"><h5>Vehicle with obscured plates or windows</h5><p>License plates covered, tinted windows unusually dark, or a vehicle that appears modified in a suspicious way.</p></div></div>
+        </div>
+
+        <div class="indicator-group">
+          <div class="group-head"><span class="emoji">⚠️</span> Situations &amp; Signs</div>
+          <div class="indicator-item"><div class="ind-ico">🚪</div><div class="ind-body"><h5>Doors, windows, or locks tampered with</h5><p>Doors forced open, windows broken, or locks showing signs of being picked or cut.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">💬</div><div class="ind-body"><h5>Written or verbal threats</h5><p>Graffiti, notes, chat messages, or spoken threats mentioning a bomb, explosion, or "something happening" at school.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🧪</div><div class="ind-body"><h5>Missing or moved lab chemicals</h5><p>Chemicals, equipment, or supplies missing from the science lab, or found in places they should not be.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">🔥</div><div class="ind-body"><h5>Small fires or burn marks</h5><p>Small, unexplained fires, scorch marks, or burnt residue found in areas not meant for any fire activity.</p></div></div>
+          <div class="indicator-item"><div class="ind-ico">📅</div><div class="ind-body"><h5>Threats tied to a specific date or event</h5><p>Any rumor or message mentioning a specific date — exam day, graduation, foundation day — connected to a threat.</p></div></div>
+        </div>
+
+        <div class="callout danger" style="margin-top:14px">
+          <b>If you see anything suspicious</b>
+          Do not touch, move, cover, or photograph it. Do not use radios or phones near it. Clear the area, alert the school head, and call 911 / PNP.
+        </div>
+      </div>
+    </details>
+
+    <details class="acc" id="acc-vulnerable">
+      <summary>
+        <span class="ico">📍</span> Vulnerable Areas — Risk Mapping
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+        <div class="vuln-intro">
+          <h4>🎯 Know your school's weak points</h4>
+          <p>Not every area of the campus is equally attractive to a would-be bomber. This section classifies common school zones into three risk levels so that staff can prioritize awareness and inspection — <b>not</b> conduct their own searches.</p>
+        </div>
+
+        <div class="risk-legend">
+          <div class="rl high"><span class="rl-dot"></span><strong>High Risk</strong><span>Prime targets</span></div>
+          <div class="rl med"><span class="rl-dot"></span><strong>Medium Risk</strong><span>Vulnerable spots</span></div>
+          <div class="rl low"><span class="rl-dot"></span><strong>Low Risk</strong><span>Occasional checks</span></div>
+        </div>
+
+        <div class="risk-group">
+          <div class="risk-head high"><span class="rh-dot"></span> 🔴 High Risk — Red<span class="rh-count">9 areas</span></div>
+          <div class="vuln-item high"><h5>Science Laboratories &amp; Storerooms</h5><p>The primary target area for sourcing chemicals, glassware, and heating elements. Chemicals used in legitimate experiments can also be used to construct IEDs.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>Comfort Rooms &amp; Restrooms</h5><p>Secluded, rarely monitored, and regularly visited by students. Easy for someone to leave a device and walk away without being noticed.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>Storage Rooms &amp; Janitorial Closets</h5><p>Locked or poorly monitored spaces where suspicious items can be hidden for hours or days without being discovered.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>Main Entrance &amp; Drop-off Zones</h5><p>High-traffic areas with many unknown visitors. Ideal for someone to slip a bag, box, or package into the crowd during peak arrival and dismissal times.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>School Canteen &amp; Kitchen Area</h5><p>Dense with students during breaks and containing flammable materials such as LPG tanks, cooking oil, and cleaning chemicals. A blast here maximizes casualties.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>Assembly Grounds &amp; Gymnasium</h5><p>Where the whole school gathers. A device placed here — or at an evacuation site — can affect hundreds of students and staff at once.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>Electrical Rooms &amp; Generator Sets</h5><p>Contain transformers, breakers, and fuel. An explosion here can cause fire, power outage, and cascading damage to adjacent buildings.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>Motorpool / Vehicle Parking Area</h5><p>Fuel tanks, school service vehicles, and unattended cars. A VBIED (vehicle-borne IED) can be driven or parked close to buildings.</p><span class="vn-tag high">High Risk</span></div>
+          <div class="vuln-item high"><h5>Unused / Vacant Classrooms</h5><p>Rooms with no regular occupant are rarely inspected. Devices can be placed and left for extended periods.</p><span class="vn-tag high">High Risk</span></div>
+        </div>
+
+        <div class="risk-group">
+          <div class="risk-head med"><span class="rh-dot"></span> 🟠 Medium Risk — Orange<span class="rh-count">10 areas</span></div>
+          <div class="vuln-item med"><h5>Hallways &amp; Corridors</h5><p>Constant foot traffic during passing periods, but quiet between bells. Easy to leave an unattended bag against a wall or under a bench.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>Stairwells &amp; Fire Exits</h5><p>Essential for evacuation but also easy to block. Suspicious items left here can also interrupt escape routes during an actual incident.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>Library &amp; Learning Resource Centers</h5><p>Quiet, densely packed with paper and shelving. Students and staff may be slow to notice an unattended bag or parcel among the shelves.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>Computer Laboratories</h5><p>Full of electronics, extension cords, and active wiring. A device hidden behind a CPU tower or under a desk can go unnoticed for hours.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>Faculty Room &amp; Administrative Office</h5><p>Central to school operations and often visited by outsiders. An incident here disrupts coordination and response.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>School Clinic / Health Room</h5><p>Contains medicines, sharps, and sometimes oxygen tanks. Chemicals here can be misused, and a blast would eliminate first-aid capability during an emergency.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>Covered Courts &amp; Open Stage</h5><p>Large open spaces used for programs and P.E. Harder to search thoroughly due to size and elevated structures.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>School Gates &amp; Perimeter Fences</h5><p>First line of defense — and the easiest place for a device to be thrown over or handed off without anyone noticing.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>Garbage Bins &amp; Waste Collection Points</h5><p>Rarely checked inside. Common hiding spot for small IEDs or improvised devices disguised as trash.</p><span class="vn-tag med">Medium Risk</span></div>
+          <div class="vuln-item med"><h5>School-Based Feeding / Nutrition Areas</h5><p>Contain cooking equipment, fuel, and large groups of young children during feeding programs.</p><span class="vn-tag med">Medium Risk</span></div>
+        </div>
+
+        <div class="risk-group">
+          <div class="risk-head low"><span class="rh-dot"></span> 🟡 Low Risk — Yellow<span class="rh-count">8 areas</span></div>
+          <div class="vuln-item low"><h5>Flag Pole &amp; Ceremonial Grounds</h5><p>Used during flag ceremonies only. Less visited throughout the day but still a symbolic target worth occasional inspection.</p><span class="vn-tag low">Low Risk</span></div>
+          <div class="vuln-item low"><h5>School Gardens &amp; Landscaped Areas</h5><p>Open, visible, and hard to hide a device in. Still worth a glance for disturbed soil or discarded items.</p><span class="vn-tag low">Low Risk</span></div>
+          <div class="vuln-item low"><h5>Waiting Sheds &amp; Tricycle / Jeepney Stops</h5><p>Transient areas used by parents and students. Devices may be left behind briefly, but people tend to notice forgotten belongings here.</p><span class="vn-tag low">Low Risk</span></div>
+          <div class="vuln-item low"><h5>Guidance Office &amp; Counseling Rooms</h5><p>Private, quiet spaces with limited traffic. Lower target value but worth awareness because of confidentiality.</p><span class="vn-tag low">Low Risk</span></div>
+          <div class="vuln-item low"><h5>School Supply &amp; Stock Rooms (Non-Chemical)</h5><p>Paper, uniforms, and general supplies. Flammable but not explosive — still, an unattended item here should be reported.</p><span class="vn-tag low">Low Risk</span></div>
+          <div class="vuln-item low"><h5>Bulletin Boards &amp; Display Walls</h5><p>Open and visible, but occasionally used to hide small items behind notices or posters.</p><span class="vn-tag low">Low Risk</span></div>
+          <div class="vuln-item low"><h5>Audio-Visual / Media Rooms</h5><p>Contain electronics but are usually locked when not in use. Low foot traffic, but worth ensuring locked access.</p><span class="vn-tag low">Low Risk</span></div>
+          <div class="vuln-item low"><h5>Sports Equipment Storage</h5><p>Balls, mats, and gear — mostly harmless. But the storage area may have poor lighting that could hide a small device.</p><span class="vn-tag low">Low Risk</span></div>
+        </div>
+
+        <div class="callout warn" style="margin-top:16px">
+          <b>How to use this section</b>
+          During a bomb threat, prioritize clearing and reporting areas by risk level — high first, then medium, then low. But remember: <b>teachers do not search for devices</b>. Clearing and reporting are the only actions within the school's scope. Actual search and disposal always belong to EOD and law enforcement.
+        </div>
+
+      </div>
+    </details>
+
+    <details class="acc" id="acc-bombers">
+      <summary>
+        <span class="ico">🕵️</span> Who Are the Possible Bombers
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+        <div class="callout info" style="margin-top:0;margin-bottom:12px">
+          <b>Why this matters</b>
+          Knowing who typically makes bomb threats helps staff recognize patterns, respond appropriately, and avoid dangerous assumptions. This section is for awareness — not for profiling individuals.
+        </div>
+
+        <div class="bomber-card"><h4><span class="emoji">💣</span> Terrorists / Organized Groups</h4><p>Individuals or groups using bombs to advance an ideological, political, or religious agenda. Their threats are usually planned, coordinated, and may involve secondary devices. These are the most dangerous category and require the full response protocol.</p></div>
+
+        <div class="bomber-card"><h4><span class="emoji">🧠</span> Persons with Mental Health Problems</h4><p>Individuals experiencing paranoia, delusions, or severe emotional distress. They may make threats without the actual capability to carry them out — but the threat must still be treated as real until proven otherwise.</p></div>
+
+        <div class="bomber-card"><h4><span class="emoji">🎭</span> Pranksters / Joke-makers</h4><p>Mostly students or young people who think bomb jokes are funny. Even though they usually mean no harm, their actions are criminal under PD 1727 and trigger costly, disruptive responses. Still treated as real until cleared.</p></div>
+
+        <div class="bomber-card"><h4><span class="emoji">😠</span> Disgruntled Individuals / Revenge Seekers</h4><p>Persons with a real or perceived grievance — former students, employees, or community members — who may use a threat to get back at the school or specific persons. Threats may be targeted and personal.</p></div>
+
+        <div class="bomber-card"><h4><span class="emoji">💰</span> Extortionists</h4><p>Individuals or groups who use bomb threats to demand money or concessions. Common in transport, business, and sometimes institutional settings. The threat is used as leverage, but the device may still be real.</p></div>
+
+        <div class="bomber-card"><h4><span class="emoji">🎓</span> Students Avoiding an Exam or Event</h4><p>A specific concern in schools: a student may call in a threat to cancel a test, delay a deadline, or escape a consequence. Regardless of the motive, the response must be the same — full protocol, no shortcuts.</p></div>
+
+        <div class="bomber-card"><h4><span class="emoji">🧪</span> Experimenters / Curious Individuals</h4><p>Persons — often young — who mix chemicals or build small devices out of curiosity, without fully understanding the danger. Their "experiment" can still cause serious injury or death, and may be discovered accidentally by others.</p></div>
+
+        <div class="callout danger">
+          <b>Key point</b>
+          Motive does not change the response. Whether the caller is a terrorist, a prankster, or a student avoiding an exam — treat every bomb threat as real until EOD and law enforcement say otherwise.
+        </div>
+      </div>
+    </details>
+
+    <details class="acc" id="acc-bomb">
+      <summary>
+        <span class="ico">🧨</span> Bomb Items — Image Awareness
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+
+        <div class="aware">
+          <div class="photo small" id="photo-blcap"><span>📷 IMAGE: Blasting Cap</span><span class="fname">blcap.png</span></div>
+          <h4>Blasting Cap</h4>
+          <div class="chips"><span class="chip">Looks like: small pipe / toy</span><span class="chip red">Actually: initiator</span></div>
+          <p>A small cylindrical metal shell containing a primary explosive. Used to detonate a larger charge. Can be mistaken for a toy or scrap metal.</p>
+        </div>
+
+        <div class="aware">
+          <div class="photo small" id="photo-dcord"><span>📷 IMAGE: Detonating Cord</span><span class="fname">dcord.png</span></div>
+          <h4>Detonating Cord</h4>
+          <div class="chips"><span class="chip">Looks like: rope / wire</span><span class="chip red">Actually: explosive cord</span></div>
+          <p>A flexible cord filled with explosive material inside. Often mistaken for ordinary rope, cable, or packaging twine.</p>
+        </div>
+
+        <div class="aware">
+          <div class="photo small" id="photo-ied"><span>📷 IMAGE: Improvised Explosive Device</span><span class="fname">ied.png</span></div>
+          <h4>Improvised Explosive Device (IED)</h4>
+          <div class="chips"><span class="chip">Looks like: bag / lunchbox</span><span class="chip red">Actually: IED</span></div>
+          <p>Disguised in everyday objects. Common components: mobile phone trigger, wires, batteries, and ammonium nitrate fuel oil (ANFO). Very dangerous and covert, ONLY EOD personnel should handle these.</p>
+        </div>
+
+        <div class="aware">
+          <div class="photo small" id="photo-shexpl"><span>📷 IMAGE: Sheet Explosive</span><span class="fname">Shexpl.png</span></div>
+          <h4>Sheet Explosive</h4>
+          <div class="chips"><span class="chip">Looks like: paper / folder / pad</span><span class="chip red">Actually: plastic explosive sheet</span></div>
+          <p>A thin, flexible sheet of plastic explosive that can be cut, shaped, and hidden inside folders, books, or flat objects. Very easy to miss during a visual check because it looks like paper or a thin pad. A meter of this, at very close range, the high peak overpressure is capable of fracturing dense materials such as concrete or steel through direct energy transfer and local displacement.</p>
+        </div>
+
+        <div class="callout danger">
+          <b>Never touch</b>
+          If you see any of these, do not touch, move, or cover them. Clear the area and report immediately.
+        </div>
+      </div>
+    </details>
+
+    <!-- NEW: YOUTUBE VIDEOS -->
+    <details class="acc" id="acc-videos">
+      <summary>
+        <span class="ico">▶️</span> YouTube Videos — Watch &amp; Learn
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+
+        <div class="video-intro">
+          <h4>🎥 Learn by watching</h4>
+          <p>These videos are curated for teacher DRRM training. Tap any card to open the video in your device's YouTube app or browser. All links open in a new tab so you don't lose your place in the app.</p>
+        </div>
+
+        <div class="video-group">
+          <div class="group-head"><span class="emoji">🚨</span> PNP RECU8</div>
+
+          <a class="video-card" href="https://youtu.be/B2777LqZzjE" target="_blank" rel="noopener noreferrer">
+            <div class="video-thumb"><span class="play-icon">▶</span></div>
+            <div class="video-info">
+              <h5>Regional Explosive Ordnance Disposal 8 (RECU8)</h5>
+              <div class="video-meta">
+                <span class="yt-badge">YouTube</span>
+                <span>General awareness</span>
+              </div>
+              <div class="video-url">youtube.com/watch?v=B2777LqZzjE</div>
+            </div>
+          </a>
+
+        <div class="video-callout">
+          <b>⚠️ Developer Note</b>
+          Video linked above as of now is the only verified PNP RECU8 video available for public viewing. If you find other official, verified PNP RECU8 videos, please report to the developer for inclusion in this section. Thank you.
+        </div>
+
+      </div>
+    </details>
+
+    <details class="acc" id="acc-house">
+      <summary>
+        <span class="ico">🏠</span> Highly Dangerous Household Items
+        <svg class="chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </summary>
+      <div class="content">
+        <div class="aware"><h4>Ammonium Nitrate</h4><p>Commonly found in fertilizers. A key ingredient in ANFO explosives. Should not be stored in large quantities on school grounds.</p></div>
+        <div class="aware"><h4>Hydrogen Peroxide (concentrated)</h4><p>Concentrated solutions are controlled chemicals. Ordinary household peroxide is dilute and safe.</p></div>
+        <div class="aware"><h4>Potassium Nitrate</h4><p>Used in some fertilizers and stump removers. Controlled in higher concentrations.</p></div>
+        <div class="aware"><h4>Sodium Chlorate</h4><p>Found in some herbicides. Controlled in higher concentrations.</p></div>
+        <div class="callout warn">
+          <b>For awareness only</b>
+          This section is for recognition, not for handling. Report suspected stockpiles to the school head and authorities.
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- REMEMBER -->
+  <section id="screen-remember" class="screen">
+    <div class="remember-intro">
+      <h3>🧠 Most Important Things to Remember</h3>
+      <p>These are the critical reminders every school staff must internalize. In a bomb threat, seconds matter — these habits save lives.</p>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">🔍</div>
+      <div class="rc-body">
+        <h4>Conduct a prior search at the evacuation area</h4>
+        <p>Before sending students to any evacuation site, a designated staff member must <span class="highlight">visually sweep the area first</span>.</p>
+        <p>Why? A <span class="highlight">secondary bomb</span> may have been placed at the evacuation site to target people fleeing the first threat.</p>
+        <p>If anything suspicious is found, <span class="highlight">do not send students there</span>. Redirect to the alternate site.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">↔️</div>
+      <div class="rc-body">
+        <h4>Establish a two-way evacuation area</h4>
+        <p>Always prepare <span class="highlight">two evacuation sites in opposite directions</span> — Site A and Site B.</p>
+        <p>If Site A is compromised, is blocked, or becomes unsafe, staff can immediately redirect to Site B without confusion or delay.</p>
+        <p>A single evacuation point is a single point of failure.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">💥</div>
+      <div class="rc-body">
+        <h4>If a bombing occurs — do not run</h4>
+        <p>Running after a blast can lead you <span class="highlight">into the path of a secondary device</span> or into falling debris.</p>
+        <p><span class="highlight">Stay where you are</span> if you are already in a cleared, protected area — away from windows, glass, and load-bearing structures.</p>
+        <p>If you are exposed, move calmly to the nearest cleared area. <span class="highlight">Do not rush in the open</span>.</p>
+      </div>
+    </div>
+
+    <div class="remember-card safe">
+      <div class="badge">✨</div>
+      <div class="rc-body">
+        <h4>Use a "magic word" to trigger a calm evacuation</h4>
+        <p>Young children may panic if they sense danger. Instead, agree on a <span class="highlight green">pre-planned magic word or phrase</span> that tells staff to begin evacuation — <span class="highlight green">without alarming the children</span>.</p>
+        <p>The children should think it is simply a routine activity, a fire drill, or a game.</p>
+
+        <div class="magic-word-box">
+          <div class="label">Example magic word</div>
+          <div class="example">"<b>Sunshine walk</b>, everyone — line up quietly and follow me outside."</div>
+        </div>
+
+        <p style="margin-top:9px">The magic word must be:</p>
+        <p style="margin-top:4px">• Known <b>only</b> to school staff<br>
+           • Short, natural, and non-threatening<br>
+           • Practiced during drills so it feels routine<br>
+           • Never explained to students in advance</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">✋</div>
+      <div class="rc-body">
+        <h4>Do not touch, move, or cover anything suspicious</h4>
+        <p>Never investigate an unattended item yourself. Never let a student check it. Never place it in water or cover it.</p>
+        <p><span class="highlight">Clear the area</span> and report to the school head and authorities immediately.</p>
+      </div>
+    </div>
+
+    <div class="remember-card">
+      <div class="badge">🤫</div>
+      <div class="rc-body">
+        <h4>Keep calm and control information</h4>
+        <p>Panic causes more injuries than the threat itself. Speak softly, give clear short instructions, and <span class="highlight">do not announce "there is a bomb"</span> to students.</p>
+        <p>Only staff need to know the real reason for the evacuation.</p>
+      </div>
+    </div>
+
+    <div class="remember-card safe">
+      <div class="badge">✅</div>
+      <div class="rc-body">
+        <h4>Wait for the official ALL CLEAR</h4>
+        <p>Only EOD or the incident commander can declare the site safe. Do not re-enter any building based on rumors or assumptions.</p>
+        <p>Once cleared, provide <span class="highlight green">Psychological First Aid</span> to students and staff, then document and debrief.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">🚫</div>
+      <div class="rc-body">
+        <h4>Once evacuated — never go back inside</h4>
+        <p>No matter how important the thing left behind is — a bag, a phone, a wallet, a laptop, a thesis, a car key — <span class="highlight">do not attempt to go back into the building</span>.</p>
+        <p>A second device may be timed or triggered specifically to catch people who return. <span class="highlight">Life is more important than any material possession.</span></p>
+        <p>Report any missing item to the incident commander. Do not retrieve it yourself.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">⚡</div>
+      <div class="rc-body">
+        <h4>Some bombs are triggered by ordinary actions</h4>
+        <p>IEDs may be detonated through a variety of triggers — not just a timer. Common triggers include:</p>
+        <p>
+          • <b>Motion</b> — moving, lifting, or tilting the object<br>
+          • <b>Light</b> — turning lights on or off, or opening a door<br>
+          • <b>Radio waves</b> — mobile phones, two-way radios, or Wi-Fi signals<br>
+          • <b>Lasers</b> — a beam of light interrupted by a person or object<br>
+          • <b>Vibrations</b> — loud sounds, footsteps, or heavy vehicles
+        </p>
+        <p><span class="highlight">This is why you must not touch, move, cover, or use radios near a suspicious item.</span></p>
+      </div>
+    </div>
+
+    <div class="remember-card">
+      <div class="badge">🤝</div>
+      <div class="rc-body">
+        <h4>Use silent and visual signals, not voices</h4>
+        <p>If a threat is confirmed and students are nearby, <span class="highlight">do not shout instructions</span> — shouting can trigger panic or, in some devices, vibration-based detonators.</p>
+        <p>Use <span class="highlight green">hand signals, written notes, or pre-agreed gestures</span> to communicate with other staff. Pre-arrange these signals during drills.</p>
+      </div>
+    </div>
+
+    <div class="remember-card safe">
+      <div class="badge">🎒</div>
+      <div class="rc-body">
+        <h4>Leave belongings behind — they are not a priority</h4>
+        <p>Students will instinctively want to grab their bags, phones, or projects. <span class="highlight green">Train them to leave everything and move</span>.</p>
+        <p>Bags can also conceal secondary devices, so picking them up is dangerous. The rule is simple: <span class="highlight green">leave it, leave it now</span>.</p>
+      </div>
+    </div>
+
+    <div class="remember-card safe">
+      <div class="badge">👷</div>
+      <div class="rc-body">
+        <h4>Trust the professionals — do not second-guess EOD</h4>
+        <p>Once EOD and law enforcement are on site, <span class="highlight green">follow their instructions without argument</span> — even if the instructions seem inconvenient or slow.</p>
+        <p>Do not volunteer to "check" anything. Do not try to help clear the building. <span class="highlight green">Your job is now to support, not to act.</span></p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">📋</div>
+      <div class="rc-body">
+        <h4>Do a roll call by name, not by number</h4>
+        <p>A headcount is not enough — <span class="highlight">call each student by name</span> to confirm who is present and who is missing.</p>
+        <p>Students may hide, run to a different exit, or be pulled away by a parent. A name-by-name check catches these cases that a simple count will miss.</p>
+        <p>Report any unaccounted student to the incident commander immediately.</p>
+      </div>
+    </div>
+
+    <div class="remember-card safe">
+      <div class="badge">👥</div>
+      <div class="rc-body">
+        <h4>Use a buddy system during evacuation</h4>
+        <p>Pair students up — <span class="highlight green">each student is responsible for their buddy</span>. This reduces stragglers and helps teachers spot missing students faster.</p>
+        <p>Assign a buddy to students with special needs, younger children, or anyone who may need extra help moving.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">📵</div>
+      <div class="rc-body">
+        <h4>Stay off radios and mobile phones near the threat area</h4>
+        <p>Radio frequency signals can trigger some IEDs. <span class="highlight">Do not use two-way radios, mobile phones, or Wi-Fi near a suspicious item</span>.</p>
+        <p>Move to a safe distance before making calls. If possible, use landline or relay messages through a runner who is already outside the danger zone.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">🪢</div>
+      <div class="rc-body">
+        <h4>Watch for tripwires and disturbed surfaces</h4>
+        <p>When moving through a cleared area, look for <span class="highlight">thin wires, fishing line, or disturbed ground</span> — these may be tripwires or pressure triggers.</p>
+        <p>Do not step over, under, or around anything suspicious. <span class="highlight">Stop, back away slowly, and alert others.</span></p>
+      </div>
+    </div>
+
+    <div class="remember-card safe">
+      <div class="badge">🏫</div>
+      <div class="rc-body">
+        <h4>Follow the official reunification procedure</h4>
+        <p>Parents will rush to the school to pick up their children. <span class="highlight green">Do not release students to anyone except through the official reunification point</span>.</p>
+        <p>Verify identity, log every release, and only release students once the incident commander authorizes it. This prevents students from being taken by unauthorized persons during the chaos.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">📝</div>
+      <div class="rc-body">
+        <h4>Exhaust all means to document the threat — refer to CISA</h4>
+        <p>Upon receiving the threat, <span class="highlight">gather every detail you can</span> — exact words, time, voice, background noise, language used, and any identifying sounds. Use the <b>CISA Bomb Threat Checklist</b> as your guide.</p>
+        <p>The more information you capture in the first few minutes, the more useful it will be to investigators. Memory fades — write it down immediately.</p>
+        <a class="readmore" href="https://www.cisa.gov/sites/default/files/2025-08/Bomb_Threat_Checklist_082025_508.pdf" target="_blank" rel="noopener noreferrer">
+          📄 Open CISA Bomb Threat Checklist
+          <svg viewBox="0 0 24 24"><path d="M14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7zm-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7v-2z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">✉️</div>
+      <div class="rc-body">
+        <h4>If the threat came by letter — touch it as little as possible</h4>
+        <p>A written threat is <span class="highlight">physical evidence</span>. Every extra fingerprint on the paper makes the investigation harder.</p>
+        <p><span class="highlight">Do not crumple it, do not fold it, do not write on it, do not place it in plastic.</span> Pick it up by the edges only, place it in a clean paper envelope or folder, and hand it over to authorities as-is.</p>
+        <p>More fingerprints mean more hassle later — keep the letter in the condition it was found.</p>
+      </div>
+    </div>
+
+    <div class="remember-card critical">
+      <div class="badge">💾</div>
+      <div class="rc-body">
+        <h4>If the threat came online — preserve it, do not delete it</h4>
+        <p>Digital threats carry <span class="highlight">hidden data</span> that can help investigators: <b>metadata or EXIF</b> inside images, the <b>sender's email address</b>, the <b>IP address</b>, timestamps, and platform account details.</p>
+        <p><span class="highlight">Do not delete the message.</span> Do not edit it. Do not forward it widely — forwarding can alter metadata. Take screenshots, note the platform (Facebook, SMS, email, etc.), and report to the school head and PNP immediately.</p>
+        <p>If it is an image file, keep the original file. Do not crop, resize, or re-upload it — those actions strip metadata.</p>
+      </div>
+    </div>
+
+    <div class="section-title">Common Misconceptions</div>
+    <div class="remember-intro" style="background:var(--danger-soft);border-left-color:var(--danger);margin-bottom:12px">
+      <h3 style="color:#8E1F1F">⚠️ Myth vs. Fact</h3>
+      <p style="color:#8E1F1F">These are the most common false beliefs about bomb threats and bombings. Correcting them is part of preparedness.</p>
+    </div>
+
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"A bomb threat is nothing serious — it's just a prank or a joke."</p></div><div class="fact"><span class="tag">Fact</span><p>Every bomb threat must be treated as real until proven otherwise. In the Philippines, making a bomb joke is a <b>criminal offense under PD 1727</b>. Schools cannot afford to gamble on a guess.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"If I don't see a bomb, there is no bomb."</p></div><div class="fact"><span class="tag">Fact</span><p>IEDs are designed to be hidden — inside bags, boxes, appliances, or everyday objects. <b>Not seeing one does not mean it isn't there.</b> Only EOD can confirm the area is clear.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"I should quickly check the suspicious bag myself before raising alarm."</p></div><div class="fact"><span class="tag">Fact</span><p>Untrained handling of a suspicious item can <b>trigger the device</b>. Teachers must <b>never touch, move, or open</b> a suspicious object. Clear the area and report immediately.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"After the first explosion, it's safe to run out into the open."</p></div><div class="fact"><span class="tag">Fact</span><p>Many bombing incidents use a <b>secondary device</b> timed to hit people fleeing the first blast. <b>Do not run into the open.</b> Stay in a cleared area or move calmly to one.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"One evacuation site is enough — we can all gather in the same place."</p></div><div class="fact"><span class="tag">Fact</span><p>A single assembly point is a single point of failure. Schools should maintain <b>two evacuation areas in opposite directions</b> so one can be used if the other is compromised.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"The children need to know the truth so they cooperate."</p></div><div class="fact"><span class="tag">Fact</span><p>Young children can panic and stampede, causing more injuries than the threat itself. Use a <b>pre-agreed magic word</b> to trigger a calm, orderly evacuation — the children do not need to know the real reason.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"Once the police arrive, teachers can relax and go back to class."</p></div><div class="fact"><span class="tag">Fact</span><p>Teachers still have duties after handoff: <b>accounting for students, Psychological First Aid, documentation, and debriefing.</b> Re-entry is only allowed after the official ALL CLEAR from EOD.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"Posting about the incident online helps warn others."</p></div><div class="fact"><span class="tag">Fact</span><p>Unverified posts can spread panic, compromise the investigation, and violate privacy. <b>Do not post unverified information.</b> Follow official communication channels only.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"A bomb threat is a good excuse to cancel class — the students will be fine."</p></div><div class="fact"><span class="tag">Fact</span><p>The purpose of evacuation is <b>safety, not convenience</b>. Treating a threat as a class cancellation teaches students the wrong lesson and can cause panic or future false alarms. Handle it as a serious incident, not a holiday.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"Only big cities or high-profile schools get bomb threats."</p></div><div class="fact"><span class="tag">Fact</span><p>Bomb threats have been reported in <b>barangay schools, rural campuses, and small private institutions</b>. No school is too small to be a target — and every school should have a plan.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"If it's a student prank, we don't need to call the police."</p></div><div class="fact"><span class="tag">Fact</span><p>Even if the caller is later identified as a student, the <b>threat is still a crime under PD 1727</b> and the school cannot verify it alone. Call the authorities — let them decide.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"We can just search the building ourselves and skip calling 911."</p></div><div class="fact"><span class="tag">Fact</span><p>Teachers and school staff are <b>not trained to search for or handle explosives</b>. A self-conducted search can trigger the device or miss a hidden one. <b>Call 911 and let EOD handle the search.</b></p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"Turning off the lights and hiding is always safer than evacuating."</p></div><div class="fact"><span class="tag">Fact</span><p>Not always. A bomb can be triggered by <b>light switches, motion, or a timer</b>. The decision to lockdown or evacuate depends on the situation. Follow the contingency plan — do not improvise.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"A bomb always looks like a bomb — with wires, a clock, and red sticks."</p></div><div class="fact"><span class="tag">Fact</span><p>Real IEDs rarely look like movie bombs. They are often <b>hidden inside ordinary objects</b> — a juice box, a book, a folder, a rice cooker, or a teddy bear. <b>Anything unusual in the wrong place is suspicious.</b></p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"If a bomb-sniffing dog didn't alert, the area is safe."</p></div><div class="fact"><span class="tag">Fact</span><p>Sniffer dogs are a <b>tool, not a guarantee</b>. Some explosives are sealed, masked, or formulated to evade detection. The official ALL CLEAR must come from <b>EOD, not from a dog's reaction</b>.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"The restroom, stairwell, or basement is a safe place to hide."</p></div><div class="fact"><span class="tag">Fact</span><p>Small, enclosed, windowless spaces can <b>concentrate blast pressure and debris</b>. Follow your contingency plan for designated safe areas — do not hide in restrooms or stairwells unless trained and instructed.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"I can use my phone freely during an evacuation — it's just a phone."</p></div><div class="fact"><span class="tag">Fact</span><p>Mobile phones emit radio frequency signals that can <b>trigger some IEDs</b>. Avoid using phones near a suspicious item. Also, network congestion during emergencies can <b>block emergency calls</b> — keep lines free for responders.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"Only teachers need to know the plan — students just follow."</p></div><div class="fact"><span class="tag">Fact</span><p>Students, non-teaching staff, canteen workers, and security guards must also know the basics — <b>where to go, what signal to follow, and what NOT to touch</b>. A plan only staff know is a plan with holes.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"If you find a suspicious object, you should take it to the teacher or security office."</p></div><div class="fact"><span class="tag">Fact</span><p><b>Do not carry or move it.</b> Keep away from the object and immediately alert a teacher, school administrator, security personnel, or emergency responder.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"A bomb threat can safely be ignored if the caller sounds joking."</p></div><div class="fact"><span class="tag">Fact</span><p> <b>The apparent attitude of the caller does not determine whether the threat is safe</b>. Information about the threat should be reported promptly to the proper authorities.</p></div></div>
+    <div class="misconception"><div class="myth"><span class="tag">Myth</span><p>"Students should use their phones to record the incident."</p></div><div class="fact"><span class="tag">Fact</span><p> <b>Recording should not take priority over safety</b>. Follow evacuation or shelter instructions and avoid interfering with emergency responders.</p></div></div>
+    <div class="callout info" style="margin-top:6px">
+      
+      <b>Remember</b>
+      In a bomb threat, the goal is not to be a hero — it is to keep every student safe and to hand over the situation to the professionals without adding to the danger.
+    </div>
+  </section>
+
+  <!-- MORE -->
+  <section id="screen-more" class="screen">
+    <div class="section-title" style="margin-top:4px">About the Developer</div>
+
+    <div class="dev-card">
+      <div class="eyebrow">A Message from REY | Developer</div>
+      <h3>Built for teachers, by just another teacher who believes in the importance of school safety.</h3>
+      <p>This app was developed as a free educational tool for DepEd DRRMO. It is meant to help teachers, school heads, and non-teaching staff prepare for and respond to bomb threats calmly and correctly.</p>
+      <p>No ads. No tracking. No cost. Just a guide that I hope every school will never need — but will be ready to use if they ever do.</p>
+      <p>If this app has helped you, your school, or your community, you can support its continued development through a crypto donation below.</p>
+      <div class="sig">— Thank you, and stay safe. 🛡️</div>
+    </div>
+
+    <button class="support-toggle" id="supportToggle" onclick="toggleSupport()" aria-expanded="false">
+      <div class="st-ico">💝</div>
+      <div class="st-text">
+        <strong>Support the Project</strong>
+        <span>Tap to reveal crypto donation addresses</span>
+      </div>
+      <svg class="st-chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+    </button>
+
+    <div class="support-panel" id="supportPanel">
+      <div class="crypto-box">
+        <div class="coin-head"><div class="coin-ico btc">₿</div><b>Bitcoin (BTC)</b><span>Network: Bitcoin</span></div>
+        <div class="addr-wrap"><div class="addr" id="addr-btc">bc1qmfvum9q2p27vdsc27gxt43m3yyj9nagt9w9mp5</div><button class="copy-btn" onclick="copyAddr('addr-btc', this, event)">Copy</button></div>
+      </div>
+      <div class="crypto-box">
+        <div class="coin-head"><div class="coin-ico bch">Ð</div><b>Dogecoin (DOGE)</b><span>Network: Dogecoin</span></div>
+        <div class="addr-wrap"><div class="addr" id="addr-bch">D9Ay5ACZL5PiUdEUuU33Hu34abQNZVGERB</div><button class="copy-btn" onclick="copyAddr('addr-bch', this, event)">Copy</button></div>
+      </div>
+      <div class="crypto-box">
+        <div class="coin-head"><div class="coin-ico xrp">✕</div><b>XRP</b><span>Network: XRP Ledger</span></div>
+        <div class="addr-wrap"><div class="addr" id="addr-xrp">r3ebfn9gcmi3YFoq3dRyLJXTCxzRknxzdb:2455811776</div><button class="copy-btn" onclick="copyAddr('addr-xrp', this, event)">Copy</button></div>
+      </div>
+    </div>
+
+        <div class="section-title">Acknowledgements</div>
+
+    <div class="collapsible-card" id="collab-gratitude">
+      <button class="collapsible-header" onclick="toggleCollapsible('collab-gratitude')" aria-expanded="false">
+        <div class="collapsible-ico">🙏</div>
+        <div class="collapsible-title">
+          <strong>With Gratitude</strong>
+          <span>DepEd, PNP EOD, BFP, CISA, and more</span>
+        </div>
+        <svg class="collapsible-chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </button>
+      <div class="collapsible-body">
+        <p>This app would not have been possible without the guidance, references, and inspiration from the following:</p>
+        <p>
+          • <b>Department of Education (DepEd)</b> — for the DRRM framework, child protection policies, and the standards that shape this guide.<br><br>
+          • <b>Philippine National Police – EOD / K9 Unit | RECU8</b> — for the technical reference on explosive ordnance awareness.<br><br>
+          • <b>Bureau of Fire Protection (BFP)</b> and <b>Municipal DRRMO</b> — for the emergency response framework.<br><br>
+          • <b>Cybersecurity and Infrastructure Security Agency (CISA)</b> — for the publicly available Bomb Threat Checklist used in this app.<br><br>
+          • <b>School heads, teachers, and DRRM coordinators</b> — the real frontliners who keep our learners safe every day.<br><br>
+          • <b>Fellow developers and open-source contributors</b> — whose work on the web platform made a lightweight, offline-capable app like this possible.<br><br>
+          • <b>Mr. Ethanroi A. Lagramada | DepEd Leyte Schools Division  DRRM Coordinator </b> — for his guidance, encouragement, and dedication to safety protocols that inspired this initiative for our schools. <br><br>
+          • <b>My School Head - Mr. Rico G. Jablla </b> — For giving me the opportunity to become his proxy to attend the DRRM Training and for his support in my personal project. <br><br>
+        </p>
+      </div>
+    </div>
+
+    <div class="collapsible-card" id="collab-teachers">
+      <button class="collapsible-header" onclick="toggleCollapsible('collab-teachers')" aria-expanded="false">
+        <div class="collapsible-ico">💙</div>
+        <div class="collapsible-title">
+          <strong>A Note from the Developer</strong>
+          <span>To the users</span>
+        </div>
+        <svg class="collapsible-chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </button>
+      <div class="collapsible-body">
+  <p>
+    This app is completely free to use and share for its intended purpose. Although I am just a humble Teacher I in the Schools District, I built this personal project on my own initiative—unpaid and unrequested by any organization—driven purely by my deep concern for the safety of our teachers and learners in the Philippines.
+  </p>
+
+  <p>
+    Please honor this effort by retaining the original attribution, respecting the license, and refraining from claiming the project as your own or redistributing modified versions without proper credit.
+  </p>
+
+  <p>
+    <strong>
+      Use it freely. Share it freely. Just don't steal the work.
+    </strong>
+  </p>
+
+  <p>
+    © 2026 Rey, LPT
+  </p>
+
+  <p>
+    <a href="https://eduvibeswithrey.blogspot.com/p/my-learning-journey.html#"
+       target="_blank"
+       rel="noopener noreferrer">
+      Learn more about the creator
+    </a>
+  </p>      </div>
+    </div>
+
+    <div class="section-title">App Information</div>
+
+    <div class="collapsible-card" id="collab-about">
+      <button class="collapsible-header" onclick="toggleCollapsible('collab-about')" aria-expanded="false">
+        <div class="collapsible-ico">📱</div>
+        <div class="collapsible-title">
+          <strong>About this app</strong>
+          <span>Purpose and scope</span>
+        </div>
+        <svg class="collapsible-chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </button>
+      <div class="collapsible-body">
+        <p>An educational tool for DRRM focusing on the roles and actions of teachers, school heads, and school personnel during bomb threat situations.</p>
+        <p>This guide covers school personnel duties only. It stops where Explosive Ordnance Disposal (EOD) and law enforcement assume control.</p>
+     <p>
+    <a href="https://github.com/frostedREY/BPrepared"
+       target="_blank"
+       rel="noopener noreferrer">
+      Visit the official Github repository
+    </a>
+  </p> 
+        
+      </div>
+    </div>
+
+    <div class="collapsible-card" id="collab-sources">
+      <button class="collapsible-header" onclick="toggleCollapsible('collab-sources')" aria-expanded="false">
+        <div class="collapsible-ico">📚</div>
+        <div class="collapsible-title">
+          <strong>Sources &amp; References</strong>
+          <span>Legal and technical citations</span>
+        </div>
+        <svg class="collapsible-chev" viewBox="0 0 24 24"><path d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+      </button>
+      <div class="collapsible-body">
+        <p>• Presidential Decree No. 1727<br>
+           • Republic Act No. 11479<br>
+           • DepEd DRRM and Learner Discipline issuances<br>
+           • PNP EOD / AFP references<br>
+           • CISA Bomb Threat Checklist (2025)</p>
+      </div>
+    </div>
+
+    <div class="section-title">Settings</div>
+
+    <div class="theme-card">
+      <div class="theme-icon" id="themeIcon">🌞</div>
+      <div class="theme-info">
+        <strong id="themeLabel">Light Mode</strong>
+        <span id="themeDesc">Tap the switch to turn on dark mode for comfortable reading in low light.</span>
+      </div>
+      <button class="switch" id="themeSwitch" onclick="toggleTheme()" aria-label="Toggle dark mode" aria-pressed="false">
+        <span class="knob-icon sun">☀️</span>
+        <span class="knob-icon moon">🌙</span>
+      </button>
+    </div>
+    <div class="text-size-card">
+      <div class="text-size-head">
+        <div class="text-size-icon">Aa</div>
+        <div class="text-size-info">
+          <strong>Text Size</strong>
+          <span>Choose a comfortable reading size for the app content.</span>
+        </div>
+      </div>
+      <div class="text-size-options" role="group" aria-label="Text size">
+        <button data-size="small" onclick="setTextSize('small')">Small</button>
+        <button data-size="medium" class="active" onclick="setTextSize('medium')">Medium</button>
+        <button data-size="large" onclick="setTextSize('large')">Large</button>
+      </div>
+    </div>
+    <div class="version-footer">
+      <div class="app-name">BPrepared v.2.1 - Bomb Threat Preparedness and Response Guide for Teachers and School Personnel</div>
+      <div class="dev-name">Developed by Rey 💖</div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="bottomnav">
+  <button class="navbtn active" data-screen="home" onclick="go('home')">
+    <svg viewBox="0 0 24 24"><path d="M12 3 3 10v11h6v-6h6v6h6V10z"/></svg>
+    Home
+  </button>
+  <button class="navbtn" data-screen="procedures" onclick="go('procedures')">
+    <svg viewBox="0 0 24 24"><path d="M4 5h16v2H4zm0 6h16v2H4zm0 6h10v2H4z"/></svg>
+    Procedures
+  </button>
+  <button class="navbtn" data-screen="reference" onclick="go('reference')">
+    <svg viewBox="0 0 24 24"><path d="M12 6.5C10.5 5.2 8.5 4.5 6 4.5c-1 0-2 .15-3 .5v13c1-.35 2-.5 3-.5 2.5 0 4.5.7 6 2 1.5-1.3 3.5-2 6-2 1 0 2 .15 3 .5v-13c-1-.35-2-.5-3-.5-2.5 0-4.5.7-6 2z"/></svg>
+    Reference
+  </button>
+  <button class="navbtn" data-screen="remember" onclick="go('remember')">
+    <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-4 12.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26A7 7 0 0 0 12 2zm-2 18h4v1a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1z"/></svg>
+    Remember
+  </button>
+  <button class="navbtn" data-screen="more" onclick="go('more')">
+    <svg viewBox="0 0 24 24"><path d="M6 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm6 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+    More
+  </button>
+</nav>
+
+<script>
+  /* ============================================================
+   EMERGENCY CONTACTS LIST — save & copy
+   ============================================================ */
+const ECARD_PREFIX = 'btg_emergency_';
+
+function getEcardRow(key){
+  return document.querySelector(`.ecard-row[data-key="${key}"]`);
+}
+
+function loadEmergencyContacts(){
+  ['bfp','pnp','rescue','mdrrmo'].forEach(key => {
+    const row = getEcardRow(key);
+    if (!row) return;
+    const input = row.querySelector('.ecard-input');
+    const savedNote = row.querySelector('.ecard-saved-note');
+    const saveBtn = row.querySelector('.ecard-save');
+    const saved = localStorage.getItem(ECARD_PREFIX + key);
+    if (saved){
+      input.value = saved;
+      savedNote.classList.add('show');
+      saveBtn.classList.add('saved');
+      saveBtn.textContent = '✓ Saved';
+    }
+  });
+}
+
+function saveEmergencyContact(key, btn){
+  const row = getEcardRow(key);
+  const input = row.querySelector('.ecard-input');
+  const savedNote = row.querySelector('.ecard-saved-note');
+
+  const value = input.value.trim();
+
+  // Allow empty value to clear a saved number
+  if (!value){
+    localStorage.removeItem(ECARD_PREFIX + key);
+    savedNote.classList.remove('show');
+    btn.classList.remove('saved');
+    btn.textContent = '💾 Save';
+    return;
+  }
+
+  const cleaned = value.replace(/[\s\-().]/g, '');
+  if (!/^[+]?\d{6,15}$/.test(cleaned)){
+    alert('Please enter a valid phone number.');
+    input.focus();
+    return;
+  }
+
+  localStorage.setItem(ECARD_PREFIX + key, value);
+  savedNote.classList.add('show');
+  btn.classList.add('saved');
+  btn.textContent = '✓ Saved';
+  setTimeout(() => {
+    btn.classList.remove('saved');
+    btn.textContent = '💾 Save';
+  }, 1400);
+}
+
+function copyEmergencyContact(key, btn, evt){
+  const row = getEcardRow(key);
+  const input = row.querySelector('.ecard-input');
+  const text = input.value.trim();
+
+  if (!text){
+    alert('Nothing to copy — enter or save a number first.');
+    input.focus();
+    return;
+  }
+
+  const done = () => {
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied';
+    btn.classList.add('done');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('done');
+    }, 1500);
+    // Reuse the confetti burst from the crypto copy feature
+    const rect = btn.getBoundingClientRect();
+    confettiBurst(rect.left + rect.width/2, rect.top + rect.height/2);
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+const TITLES = {
+  home: 'Bomb Threat Guide',
+  procedures: 'Procedures',
+  reference: 'Reference Library',
+  remember: 'Most Important Things to Remember',
+  more: 'More'
+};
+
+function go(screenId){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + screenId).classList.add('active');
+
+  document.querySelectorAll('.navbtn').forEach(b => {
+    b.classList.toggle('active', b.dataset.screen === screenId);
+  });
+
+  document.getElementById('appTitle').textContent = TITLES[screenId] || 'Bomb Threat Guide';
+  window.scrollTo({top:0, behavior:'instant'});
+}
+
+/* ============================================================
+   PROCEDURES TABS
+   ============================================================ */
+function setProcTab(tab){
+  document.querySelectorAll('#procSeg button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('#screen-procedures .panel').forEach(p => {
+    p.classList.toggle('active', p.id === 'panel-' + tab);
+  });
+}
+
+/* ============================================================
+   EXCLUSIVE ACCORDION
+   ============================================================ */
+const accs = document.querySelectorAll('details.acc');
+accs.forEach(d => {
+  d.addEventListener('toggle', () => {
+    if (d.open){
+      accs.forEach(other => {
+        if (other !== d && other.open) other.removeAttribute('open');
+      });
+    }
+  });
+});
+
+function openAcc(id){
+  accs.forEach(d => {
+    if (d.id !== id) d.removeAttribute('open');
+  });
+  const el = document.getElementById(id);
+  if (el) el.setAttribute('open','');
+}
+
+/* ============================================================
+   EMERGENCY CONTACTS PANEL
+   ============================================================ */
+function openContacts(){
+  document.getElementById('contactsPanel').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeContacts(){
+  document.getElementById('contactsPanel').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ============================================================
+   SUPPORT TOGGLE
+   ============================================================ */
+function toggleSupport(){
+  const btn = document.getElementById('supportToggle');
+  const panel = document.getElementById('supportPanel');
+  const isOpen = panel.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+  btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  btn.querySelector('.st-text span').textContent = isOpen
+    ? 'Tap to hide crypto donation addresses'
+    : 'Tap to reveal crypto donation addresses';
+}
+
+/* ============================================================
+   THEME TOGGLE
+   ============================================================ */
+function applyTheme(isDark){
+  document.body.classList.toggle('dark', isDark);
+  const sw = document.getElementById('themeSwitch');
+  const icon = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  const desc = document.getElementById('themeDesc');
+  sw.classList.toggle('on', isDark);
+  sw.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+  if (isDark){
+    icon.textContent = '🌙';
+    label.textContent = 'Dark Mode';
+    desc.textContent = 'Dark mode is on. Tap the switch to return to light mode.';
+  } else {
+    icon.textContent = '🌞';
+    label.textContent = 'Light Mode';
+    desc.textContent = 'Tap the switch to turn on dark mode for comfortable reading in low light.';
+  }
+  localStorage.setItem('btg_theme', isDark ? 'dark' : 'light');
+}
+function toggleTheme(){
+  applyTheme(!document.body.classList.contains('dark'));
+}
+(function initTheme(){
+  const saved = localStorage.getItem('btg_theme');
+  if (saved === 'dark') applyTheme(true);
+  else if (saved === 'light') applyTheme(false);
+})();
+
+/* ============================================================
+   TEXT SIZE
+   ============================================================ */
+const TEXT_SIZES = ['small', 'medium', 'large'];
+
+function setTextSize(size){
+  if (!TEXT_SIZES.includes(size)) size = 'medium';
+
+  document.body.classList.remove('text-small', 'text-medium', 'text-large');
+  document.body.classList.add('text-' + size);
+
+  localStorage.setItem('btg_text_size', size);
+
+  document.querySelectorAll('.text-size-options button').forEach(b => {
+    b.classList.toggle('active', b.dataset.size === size);
+  });
+}
+
+(function initTextSize(){
+  const saved = localStorage.getItem('btg_text_size');
+  setTextSize(TEXT_SIZES.includes(saved) ? saved : 'medium');
+})();
+
+/* ============================================================
+   COLLAPSIBLE CARDS (Acknowledgements & App Info)
+   ============================================================ */
+function toggleCollapsible(id){
+  const card = document.getElementById(id);
+  if (!card) return;
+
+  const isOpen = card.classList.toggle('open');
+  const header = card.querySelector('.collapsible-header');
+  if (header) header.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+/* ============================================================
+   CRYPTO COPY + CONFETTI
+   ============================================================ */
+function copyAddr(id, btn, evt){
+  const el = document.getElementById(id);
+  const text = el.textContent.trim();
+  const done = () => {
+    const original = btn.textContent;
+    btn.textContent = '✓ Copied';
+    btn.classList.add('done');
+    setTimeout(() => { btn.textContent = original; btn.classList.remove('done'); }, 1500);
+    const rect = btn.getBoundingClientRect();
+    confettiBurst(rect.left + rect.width/2, rect.top + rect.height/2);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, callback){
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); callback(); } catch(e){ alert('Copy failed. Please copy manually.'); }
+  document.body.removeChild(ta);
+}
+
+function confettiBurst(x, y, count){
+  count = count || 32;
+  const layer = document.getElementById('confettiLayer');
+  const colors = ['#F7931A','#8DC351','#0B5FA5','#C62828','#2E7D32','#B26A00','#7C4DFF','#00BCD4','#FF4081'];
+  for (let i = 0; i < count; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.left = x + 'px';
+    piece.style.top  = y + 'px';
+    const angle = Math.random() * Math.PI * 2;
+    const dist  = 60 + Math.random() * 140;
+    const dx    = Math.cos(angle) * dist;
+    const dy    = Math.sin(angle) * dist + 120;
+    const rot   = (Math.random() * 900 - 450) + 'deg';
+    piece.style.setProperty('--dx', dx + 'px');
+    piece.style.setProperty('--dy', dy + 'px');
+    piece.style.setProperty('--rot', rot);
+    piece.style.animationDuration = (700 + Math.random()*500) + 'ms';
+    piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    piece.style.width  = (5 + Math.random()*7) + 'px';
+    piece.style.height = (6 + Math.random()*10) + 'px';
+    layer.appendChild(piece);
+    setTimeout(() => piece.remove(), 1400);
+  }
+}
+
+/* ============================================================
+   BOMB ITEM IMAGE LOADER
+   ============================================================ */
+const BOMB_IMAGES = [
+  { id:'photo-blcap',  src:'blcap.png',  alt:'Blasting Cap' },
+  { id:'photo-dcord',  src:'dcord.png',  alt:'Detonating Cord' },
+  { id:'photo-ied',    src:'ied.png',    alt:'Improvised Explosive Device' },
+  { id:'photo-shexpl', src:'Shexpl.png', alt:'Sheet Explosive' }
+];
+
+function loadBombImages(){
+  BOMB_IMAGES.forEach(item => {
+    const box = document.getElementById(item.id);
+    if (!box) return;
+    const test = new Image();
+    test.onload = () => {
+      // Preserve the caption in memory, replace contents with the image
+      box.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = item.src;
+      img.alt = item.alt;
+      box.appendChild(img);
+      // Keep the container constrained even if the image is huge
+      box.style.overflow = 'hidden';
+      box.style.position = 'relative';
+    };
+    test.onerror = () => {};
+    test.src = item.src;
+  });
+}
+
+
+/* ============================================================
+   INIT
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  loadBombImages();
+  loadMisconceptions();
+  loadEmergencyContacts();
+});
+if (document.readyState !== 'loading'){
+  loadBombImages();
+  loadMisconceptions();
+  loadEmergencyContacts();
+}
+
+</script>
+
+</body>
+</html>
