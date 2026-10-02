@@ -1,0 +1,96 @@
+{
+  "_instructions": [
+    "Edit the \"entries\" array below.",
+    "Each entry must have exactly two fields: myth and fact.",
+    "Do NOT add HTML tags, scripts, or extra fields.",
+    "Maximum 100 entries. Each string max 400 characters.",
+    "When done, save as UTF-8 JSON and import via the app."
+  ],
+  "_version": 1,
+  "entries": [
+    {
+      "myth": "\"A bomb threat is nothing serious — it's just a prank or a joke.\"",
+      "fact": "Every bomb threat must be treated as real until proven otherwise. In the Philippines, making a bomb joke is a criminal offense under PD 1727. Schools cannot afford to gamble on a guess."
+    },
+    {
+      "myth": "\"If I don't see a bomb, there is no bomb.\"",
+      "fact": "IEDs are designed to be hidden — inside bags, boxes, appliances, or everyday objects. Not seeing one does not mean it isn't there. Only EOD can confirm the area is clear."
+    },
+    {
+      "myth": "\"I should quickly check the suspicious bag myself before raising alarm.\"",
+      "fact": "Untrained handling of a suspicious item can trigger the device. Teachers must never touch, move, or open a suspicious object. Clear the area and report immediately."
+    },
+    {
+      "myth": "\"After the first explosion, it's safe to run out into the open.\"",
+      "fact": "Many bombing incidents use a secondary device timed to hit people fleeing the first blast. Do not run into the open. Stay in a cleared area or move calmly to one."
+    },
+    {
+      "myth": "\"One evacuation site is enough — we can all gather in the same place.\"",
+      "fact": "A single assembly point is a single point of failure. Schools should maintain two evacuation areas in opposite directions so one can be used if the other is compromised."
+    },
+    {
+      "myth": "\"The children need to know the truth so they cooperate.\"",
+      "fact": "Young children can panic and stampede, causing more injuries than the threat itself. Use a pre-agreed magic word to trigger a calm, orderly evacuation — the children do not need to know the real reason."
+    },
+    {
+      "myth": "\"Once the police arrive, teachers can relax and go back to class.\"",
+      "fact": "Teachers still have duties after handoff: accounting for students, Psychological First Aid, documentation, and debriefing. Re-entry is only allowed after the official ALL CLEAR from EOD."
+    },
+    {
+      "myth": "\"Posting about the incident online helps warn others.\"",
+      "fact": "Unverified posts can spread panic, compromise the investigation, and violate privacy. Do not post unverified information. Follow official communication channels only."
+    },
+    {
+      "myth": "\"A bomb threat is a good excuse to cancel class — the students will be fine.\"",
+      "fact": "The purpose of evacuation is safety, not convenience. Treating a threat as a class cancellation teaches students the wrong lesson and can cause panic or future false alarms. Handle it as a serious incident, not a holiday."
+    },
+    {
+      "myth": "\"Only big cities or high-profile schools get bomb threats.\"",
+      "fact": "Bomb threats have been reported in barangay schools, rural campuses, and small private institutions. No school is too small to be a target — and every school should have a plan."
+    },
+    {
+      "myth": "\"If it's a student prank, we don't need to call the police.\"",
+      "fact": "Even if the caller is later identified as a student, the threat is still a crime under PD 1727 and the school cannot verify it alone. Call the authorities — let them decide."
+    },
+    {
+      "myth": "\"We can just search the building ourselves and skip calling 911.\"",
+      "fact": "Teachers and school staff are not trained to search for or handle explosives. A self-conducted search can trigger the device or miss a hidden one. Call 911 and let EOD handle the search."
+    },
+    {
+      "myth": "\"Turning off the lights and hiding is always safer than evacuating.\"",
+      "fact": "Not always. A bomb can be triggered by light switches, motion, or a timer. The decision to lockdown or evacuate depends on the situation. Follow the contingency plan — do not improvise."
+    },
+    {
+      "myth": "\"A bomb always looks like a bomb — with wires, a clock, and red sticks.\"",
+      "fact": "Real IEDs rarely look like movie bombs. They are often hidden inside ordinary objects — a juice box, a book, a folder, a rice cooker, or a teddy bear. Anything unusual in the wrong place is suspicious."
+    },
+    {
+      "myth": "\"If a bomb-sniffing dog didn't alert, the area is safe.\"",
+      "fact": "Sniffer dogs are a tool, not a guarantee. Some explosives are sealed, masked, or formulated to evade detection. The official ALL CLEAR must come from EOD, not from a dog's reaction."
+    },
+    {
+      "myth": "\"The restroom, stairwell, or basement is a safe place to hide.\"",
+      "fact": "Small, enclosed, windowless spaces can concentrate blast pressure and debris. Follow your contingency plan for designated safe areas — do not hide in restrooms or stairwells unless trained and instructed."
+    },
+    {
+      "myth": "\"I can use my phone freely during an evacuation — it's just a phone.\"",
+      "fact": "Mobile phones emit radio frequency signals that can trigger some IEDs. Avoid using phones near a suspicious item. Also, network congestion during emergencies can block emergency calls — keep lines free for responders."
+    },
+    {
+      "myth": "\"Only teachers need to know the plan — students just follow.\"",
+      "fact": "Students, non-teaching staff, canteen workers, and security guards must also know the basics — where to go, what signal to follow, and what NOT to touch. A plan only staff know is a plan with holes."
+    },
+    {
+      "myth": "\"If you find a suspicious object, you should take it to the teacher or security office.\"",
+      "fact": "Do not carry or move it. Keep away from the object and immediately alert a teacher, school administrator, security personnel, or emergency responder."
+    },
+    {
+      "myth": "\"A bomb threat can safely be ignored if the caller sounds joking.\"",
+      "fact": "The apparent attitude of the caller does not determine whether the threat is safe. Information about the threat should be reported promptly to the proper authorities."
+    },
+    {
+      "myth": "\"Students should use their phones to record the incident.\"",
+      "fact": "Recording should not take priority over safety. Follow evacuation or shelter instructions and avoid interfering with emergency responders."
+    }
+  ]
+}
