@@ -10,9 +10,10 @@ Below is a full feature breakdown.
 
 - **Single-file core app** — the entire UI runs from one `index.html` file with no build step, no framework, and no dependencies. Just open and use.
 - **Offline-first** — works fully offline once loaded. No internet connection required for any content.
+- **Minimal-online** - only use internet intent upon clicking "Learn more from the creator, CISA Bomb Threat Guide and Visit Github Repo"
 - **Works from `file://`** — no web server needed. Double-click the HTML file and the app runs.
 - **Capacitor-ready** — designed to be wrapped into a native Android APK via Capacitor without code changes.
-- **Externalized content** — large sections (like Common Misconceptions) live in separate `.js` files and are injected on load, keeping the main file clean and easy to maintain.
+- **Externalized content** — large sections (like Myths vs. Facts) can now live in separate `.js` file and are now possible to injected on load using *import file* function, keeping the main file clean and easy to maintain.
 - **Dark mode aware** — full dark mode across every section, toggle-persisted.
 - **Responsive layout** — designed for phones first, with safe-area insets support for notched devices.
 
@@ -103,7 +104,7 @@ Critical reminder cards organized by urgency:
 
 ### 📖 Common Misconceptions
 Myth vs. Fact cards that correct the most dangerous false beliefs about bomb threats and bombings — from "it's just a prank" to "we can search the building ourselves."
-
+Import functions added in the *v2.1.2* release, users can now import files from their local storage.
 ---
 
 ## 💝 Support & About
